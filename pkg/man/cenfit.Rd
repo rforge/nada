@@ -24,7 +24,7 @@
     A factor vector used for grouping `obs' into subsets.
 }
 \item{...}{
-    Addtional items that are common to this function and the \code{survfit}
+    Additional items that are common to this function and the \code{survfit}
     function from the `survival' package.  See Details.
 }
 %\item{formula}{
@@ -39,7 +39,7 @@
 \details{
     This, and related routines, are front ends to routines in the
     \code{survival} package.  Since the survival routines can not handle
-    left-censored data, these routines tranparently handle ``flipping" input
+    left-censored data, these routines transparently handle ``flipping" input
     data and resultant calculations.  Additionally provided are query and
     prediction methods for \code{cenfit} objects.
 
