@@ -20,7 +20,7 @@
 \item{x}{
     An output object from a NADA function such as \code{\link{ros}}.
 }
-\item{nm.rm}{Should NAs be removed prior to computation?}
+\item{na.rm}{Should NAs be removed prior to computation?}
 
 \item{...}{
         Additional arguments passed to the generic method.
