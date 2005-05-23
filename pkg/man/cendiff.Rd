@@ -69,7 +69,7 @@ Test Censored ECDF Differences
 }}
 \details{
     This, and related routines, are front ends to routines in the
-    \code{survivial} package.  Since the survival routines can not handle
+    \code{survival} package.  Since the survival routines can not handle
     left-censored data, these routines tranparently handle ``flipping" input
     data and resultant calculations.  
 
