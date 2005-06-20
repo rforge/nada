@@ -254,6 +254,31 @@ setMethod("predict", signature(object="cenfit"),
     return(ret)
 })
 
+# Public pexceed method for cenfit objects
+setMethod("pexceed", signature(object="cenfit"),
+          function(object, newdata, conf.int=FALSE) 
+{
+    ret = NULL
+    if (is.null(object@survfit$strata))
+      {
+        ret = predict(object, newdata, conf.int)
+        if (!is.data.frame(ret)) ret = 1 - ret
+        else ret[,c(2:4)] = 1 -  ret[,c(2:4)]
+      }
+    else 
+      {
+        for (i in 1:length(object@survfit$strata)) 
+          {
+            ret[[i]] = predict(object[i], newdata, conf.int)
+            if (!is.data.frame(ret)) ret[[i]] = 1 - ret[[i]]
+            else ret[[i]][,c(2:4)] = 1 -  ret[[i]][,c(2:4)]
+          }
+        names(ret) = names(object@survfit$strata)
+        class(ret) = "NADAlist"
+      }
+    return(ret)
+})
+
 # Private quantile method for cenfit objects -- does not handle strata!
 .quantile.cenfit =
 function(x, newdata, conf.int=FALSE) 
