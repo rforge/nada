@@ -31,6 +31,9 @@
     \item{qual.index}{
         Indexes of qualified values (ie., where qual.symbol was matched)
     }
+    \item{qual.index}{
+        Indexes of unqualified values (ie., where qual.symbol was not matched)
+    }
 }
 %\references{
 %
