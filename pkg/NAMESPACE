@@ -10,14 +10,16 @@ export(
     "Cen",
     "cenfit",
     "cendiff",
+    "cenmle",
     "ros",
     "hc.ppoints",
     "hc.ppoints.cen",
     "hc.ppoints.uncen")
 
 exportClasses(
+    "ros",
     "cenfit",
-    "ros")
+    "cenmle")
 
 exportMethods(
     "print",
@@ -30,6 +32,7 @@ exportMethods(
     "predict",
     "pexceed",
     "flip",
+    "asSurv",
     "lines")
 
 S3method("as.data.frame", "ros")

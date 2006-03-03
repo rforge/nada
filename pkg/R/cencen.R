@@ -10,6 +10,8 @@ setGeneric("cendiff",
 
 setGeneric("flip", function(x) standardGeneric("flip"))
 
+setGeneric("asSurv", function(x) standardGeneric("asSurv"))
+
 ## Classes 
 
 setOldClass("Surv")
@@ -87,10 +89,16 @@ setMethod("flip", signature(x="Cen"), function(x)
     return(surv)
 })
 
+
 # flip()ing a formula just symbolically updates the 
 # response (which should be a Cen object). 
 # Result is like: flip(Cen(obs, cen))~groups
+
 setMethod("flip", signature(x="formula"), function(x) update(x, flip(.)~.))
+
+setMethod("asSurv", signature(x="formula"), function(x) update(x, asSurv(.)~.))
+
+setMethod("asSurv", signature(x="Cen"), function(x) x@Surv)
 
 ## Begin cencen.* functions
 # These routines are allow cenfit and cendiff methods
