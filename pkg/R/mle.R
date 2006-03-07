@@ -11,47 +11,8 @@ setOldClass("survreg")
 
 setClass("cenmle", representation(survreg="survreg"))
 
-## Utility functions -- for use with Methods 
+## Methods
 
-## Begin cenmle.* functions
-# These routines are allow cenmle
-# to be used with Cen objects, vectors, or formulas as input.
-# Note they all convert input to a formula and call the formula method.
-
-cenmle.Cen =
-function(obs, censored, groups, ...)
-{
-    cl = match.call()
-    f = as.formula(substitute(a~1, list(a=cl[[2]])))
-    environment(f) = parent.frame()
-    callGeneric(f, ...)
-}
-
-cenmle.vectors =
-function(obs, censored, groups, ...)
-{
-    cl = match.call()
-    f = as.formula(substitute(Cen(a, b)~1, list(a=cl[[2]], b=cl[[3]])))
-    environment(f) = parent.frame()
-    callGeneric(f, ...)
-}
-
-cenmle.vectors.groups =
-function(obs, censored, groups, ...)
-{
-    cl = match.call()
-    f = substitute(Cen(a, b)~g, list(a=cl[[2]], b=cl[[3]], g=cl[[4]]))
-    f = as.formula(f)
-    environment(f) = parent.frame()
-    callGeneric(f, ...)
-}
-
-## End cenmle.* routines
-
-
-## Core Methods
-
-# cenmle for formulas
 setMethod("cenmle",
           signature(obs="formula", censored="missing", groups="missing"),
                     function(obs, censored, groups, ...)
@@ -60,9 +21,18 @@ setMethod("cenmle",
     new("cenmle", survreg=obj)
 })
 
+setMethod("cenmle", 
+          signature(obs="Cen", censored="missing", groups="missing"), 
+          cencen.Cen)
+
 setMethod("cenmle",
           signature(obs="numeric", censored="logical", groups="missing"),
-                    cenmle.vectors)
+                    cencen.vectors)
+
+setMethod("cenmle", 
+          signature(obs="numeric", censored="logical", groups="factor"), 
+          cencen.vectors.groups)
+
 
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
@@ -70,6 +40,14 @@ setMethod("print", signature(x="cenmle"), function(x, ...)
     names(ret) = c("mean", "median", "sd")
     print(ret)
     invisible(ret)
+})
+
+setMethod("transform", signature(x="cenmle"), function(x, ...)
+{
+    switch (x@survreg$dist, 
+        lognormal = transform_cenmle_lognormal(x),
+        x
+    )
 })
 
 setMethod("median", signature(x="cenmle"), function(x, na.rm=FALSE)
@@ -90,6 +68,26 @@ setMethod("mean", signature(x="cenmle"), function(x, na.rm=FALSE)
     # To do: remove NAs?
     as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
 })
+
+## Private utility functions
+
+#transform_cenmle_default = function(x) return(x)
+
+transform_cenmle_gaussian =
+function(x) 
+{
+    ret = x;
+    return(ret);
+}
+
+transform_cenmle_lognormal =
+function(x) 
+{
+    ret = x;
+    ret@survreg$coef  = exp(ret@survreg$coef)
+    ret@survreg$scale = exp(ret@survreg$scale)
+    return(ret);
+}
 
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section
 

@@ -51,6 +51,8 @@ setGeneric("pexceed", function(object, ...) standardGeneric("pexceed"))
 
 setGeneric("lines", function(x, ...) standardGeneric("lines"))
 
+setGeneric("transform", function(x, ...) standardGeneric("transform"))
+
 ## Classes
 
 setClass("NADAlist", "list")
