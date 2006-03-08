@@ -86,6 +86,5 @@ function(formula, dist, ...)
     new("cenmle-gaussian", survreg=survreg(asSurv(formula), dist=dist, ...))
 }
 
-
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section
 
