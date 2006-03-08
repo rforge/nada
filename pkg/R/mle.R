@@ -40,7 +40,7 @@ setMethod("cenmle",
           cencen.vectors.groups)
 
 
-setMethod("print", signature(x="cenmle-lognormal"), function(x, ...)
+setMethod("print", signature(x="cenmle"), function(x, ...)
 {
     ret = c(mean(x), median(x), sd(x))
     names(ret) = c("mean", "median", "sd")
@@ -50,7 +50,22 @@ setMethod("print", signature(x="cenmle-lognormal"), function(x, ...)
 
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
-    summary(object@survreg)
+    summary(object@survreg, ...)
+})
+
+setMethod("predict", signature(object="cenmle"), function(object, newdata, ...)
+{
+    predict(object@survreg, newdata, ...)
+})
+
+setMethod("residuals", signature(object="cenmle"), function(object, ...)
+{
+    residuals(object@survreg, ...)
+})
+
+setMethod("coef", signature(object="cenmle"), function(object, ...)
+{
+    coef(object@survreg, ...)
 })
 
 setMethod("median", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)

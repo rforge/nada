@@ -53,6 +53,10 @@ setGeneric("lines", function(x, ...) standardGeneric("lines"))
 
 setGeneric("transform", function(x, ...) standardGeneric("transform"))
 
+setGeneric("residuals", function(object, ...) standardGeneric("residuals"))
+
+setGeneric("coef", function(object, ...) standardGeneric("coef"))
+
 ## Classes
 
 setClass("NADAlist", "list")
