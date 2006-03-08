@@ -10,15 +10,21 @@ setGeneric("cenmle",
 setOldClass("survreg")
 
 setClass("cenmle", representation(survreg="survreg"))
+setClass("cenmle-gaussian", representation("cenmle"))
+setClass("cenmle-lognormal", representation("cenmle"))
 
-## Methods
+## Core Methods
 
 setMethod("cenmle",
           signature(obs="formula", censored="missing", groups="missing"),
-                    function(obs, censored, groups, ...)
+                    function(obs, censored, groups, dist, ...)
 {
-    obj = survreg(asSurv(obs), ...)
-    new("cenmle", survreg=obj)
+    dist = ifelse(missing(dist), "lognormal", dist)
+    switch(dist,
+        gaussian  = new_cenmle_gaussian(obs, dist, ...),
+        lognormal = new_cenmle_lognormal(obs, dist, ...),
+        survreg(asSurv(obs), dist=dist, ...)
+    )
 })
 
 setMethod("cenmle", 
@@ -34,7 +40,7 @@ setMethod("cenmle",
           cencen.vectors.groups)
 
 
-setMethod("print", signature(x="cenmle"), function(x, ...)
+setMethod("print", signature(x="cenmle-lognormal"), function(x, ...)
 {
     ret = c(mean(x), median(x), sd(x))
     names(ret) = c("mean", "median", "sd")
@@ -42,52 +48,44 @@ setMethod("print", signature(x="cenmle"), function(x, ...)
     invisible(ret)
 })
 
-setMethod("transform", signature(x="cenmle"), function(x, ...)
+setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
-    switch (x@survreg$dist, 
-        lognormal = transform_cenmle_lognormal(x),
-        x
-    )
+    summary(object@survreg)
 })
 
-setMethod("median", signature(x="cenmle"), function(x, na.rm=FALSE)
+setMethod("median", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
     as.vector(exp(x@survreg$coef))
 })
 
-setMethod("sd", signature(x="cenmle"), function(x, na.rm=FALSE)
+setMethod("sd", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
     ret = exp(2*x@survreg$coef + x@survreg$scale^2)*(exp(x@survreg$scale^2)-1)
     as.vector(sqrt(ret))
 })
 
-setMethod("mean", signature(x="cenmle"), function(x, na.rm=FALSE)
+setMethod("mean", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
     as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
 })
 
-## Private utility functions
+## Supporting Functions 
 
-#transform_cenmle_default = function(x) return(x)
-
-transform_cenmle_gaussian =
-function(x) 
+new_cenmle_lognormal =
+function(formula, dist, ...)
 {
-    ret = x;
-    return(ret);
+    new("cenmle-lognormal", survreg=survreg(asSurv(formula), dist=dist, ...))
 }
 
-transform_cenmle_lognormal =
-function(x) 
+new_cenmle_gaussian =
+function(formula, dist, ...)
 {
-    ret = x;
-    ret@survreg$coef  = exp(ret@survreg$coef)
-    ret@survreg$scale = exp(ret@survreg$scale)
-    return(ret);
+    new("cenmle-gaussian", survreg=survreg(asSurv(formula), dist=dist, ...))
 }
+
 
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section
 
