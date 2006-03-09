@@ -87,6 +87,25 @@ setMethod("mean", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
     as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
 })
 
+setMethod("median", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
+{
+    # To do: remove NAs?
+    as.vector(x@survreg$coef)
+})
+
+setMethod("sd", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
+{
+    # To do: remove NAs?
+    as.vector(x@survreg$scale)
+})
+
+setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
+{
+    # To do: remove NAs?
+    as.vector(x@survreg$coef)
+})
+
+
 ## Supporting Functions 
 
 new_cenmle_lognormal =
@@ -98,7 +117,17 @@ function(formula, dist, ...)
 new_cenmle_gaussian =
 function(formula, dist, ...)
 {
-    new("cenmle-gaussian", survreg=survreg(asSurv(formula), dist=dist, ...))
+    obs      = eval.parent(formula[[2]][[2]])
+    censored = eval.parent(formula[[2]][[3]])
+    groups   = eval.parent(formula[[3]])
+
+    start = obs - obs * censored
+    end = obs
+
+    f = as.formula(substitute(Surv(s, e, type="interval2")~g, 
+                                   list(s=start, e=end, g=groups)))
+    environment(f) = parent.frame()
+    new("cenmle-gaussian", survreg=survreg(f, dist=dist, ...))
 }
 
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section
