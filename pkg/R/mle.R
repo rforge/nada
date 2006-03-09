@@ -1,4 +1,4 @@
-#-->> BEGIN Regression on Maximum Likelihood Estimation (MLE) section
+#-->> BEGIN Maximum Likelihood Estimation (MLE) Regression section
 
 ## Generics
 
@@ -39,17 +39,19 @@ setMethod("cenmle",
           signature(obs="numeric", censored="logical", groups="factor"), 
           cencen.vectors.groups)
 
-
-setMethod("print", signature(x="cenmle"), function(x, ...)
-{
-    ret = c(mean(x), median(x), sd(x))
-    names(ret) = c("mean", "median", "sd")
-    print(ret)
-    invisible(ret)
-})
+#setMethod("print", signature(x="cenmle"), function(x, ...)
+#{
+#    ret = c(mean(x), median(x), sd(x))
+#    names(ret) = c("mean", "median", "sd")
+#    print(ret)
+#    invisible(ret)
+#})
 
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
+    # To do: modify the call object to reflect cenfit call
+    # for now, just nullify it -- users typically remember the call.
+    object@survreg$call = NULL
     summary(object@survreg, ...)
 })
 
@@ -71,38 +73,38 @@ setMethod("coef", signature(object="cenmle"), function(object, ...)
 setMethod("median", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    as.vector(exp(x@survreg$coef))
+    (exp(x@survreg$coef))
 })
 
 setMethod("sd", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
     ret = exp(2*x@survreg$coef + x@survreg$scale^2)*(exp(x@survreg$scale^2)-1)
-    as.vector(sqrt(ret))
+    (sqrt(ret))
 })
 
 setMethod("mean", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
+    (exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
 })
 
 setMethod("median", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    as.vector(x@survreg$coef)
+    (x@survreg$coef)
 })
 
 setMethod("sd", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    as.vector(x@survreg$scale)
+    (x@survreg$scale)
 })
 
 setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    as.vector(x@survreg$coef)
+    (x@survreg$coef)
 })
 
 
@@ -124,20 +126,18 @@ function(formula, dist, ...)
 # and estimates will be biased low and wrong.  So with the normal option
 # and left censoring, internally we must interval censoring.  The end of
 # the interval are the detected values.  The start of the interval will
-# have identical numbers in it for the detects, and a 0 for the nondetects.
+# have identical numbers in it for the detects, and a 0 for the 
+# nondetects (a simple trick is: start = obs - obs * censored).
 
 new_cenmle_gaussian =
 function(formula, dist, ...)
 {
-    obs      = eval.parent(formula[[2]][[2]])
-    censored = eval.parent(formula[[2]][[3]])
-    groups   = eval.parent(formula[[3]])
+    obs      = formula[[2]][[2]]
+    censored = formula[[2]][[3]]
+    groups   = formula[[3]]
 
-    start = obs - obs * censored
-    end = obs
-
-    f = as.formula(substitute(Surv(s, e, type="interval2")~g, 
-                                   list(s=start, e=end, g=groups)))
+    f = as.formula(substitute(Surv(o - o * c, o, type="interval2")~g, 
+                                   list(o=obs, c=censored, g=groups)))
     environment(f) = parent.frame()
     new("cenmle-gaussian", survreg=survreg(f, dist=dist, ...))
 }
