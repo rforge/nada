@@ -108,11 +108,23 @@ setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 
 ## Supporting Functions 
 
+# cenmle for lognormal distributions
+
 new_cenmle_lognormal =
 function(formula, dist, ...)
 {
     new("cenmle-lognormal", survreg=survreg(asSurv(formula), dist=dist, ...))
 }
+
+# cenmle for gaussian, or normal, distributions
+
+# If a normal distribution is assumed the input data must be expressed
+# as an interval between zero and the DL.  They cannot simply be stated as
+# 'left' censored, because that allows some probability of going below 0,
+# and estimates will be biased low and wrong.  So with the normal option
+# and left censoring, internally we must interval censoring.  The end of
+# the interval are the detected values.  The start of the interval will
+# have identical numbers in it for the detects, and a 0 for the nondetects.
 
 new_cenmle_gaussian =
 function(formula, dist, ...)
