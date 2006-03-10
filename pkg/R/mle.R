@@ -15,6 +15,9 @@ setClass("cenmle-lognormal", representation("cenmle"))
 
 ## Core Methods
 
+# This keeps things orthogonal with the survival package
+cenreg = cenmle
+
 setMethod("cenmle",
           signature(obs="formula", censored="missing", groups="missing"),
                     function(obs, censored, groups, dist, ...)
@@ -49,7 +52,7 @@ setMethod("cenmle",
 
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
-    # To do: modify the call object to reflect cenfit call
+    # To do: modify the call object to reflect the NADA call
     # for now, just nullify it -- users typically remember the call.
     object@survreg$call = NULL
     summary(object@survreg, ...)
