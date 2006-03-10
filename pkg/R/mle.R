@@ -58,7 +58,8 @@ setMethod("summary", signature(object="cenmle"), function(object, ...)
     summary(object@survreg, ...)
 })
 
-setMethod("predict", signature(object="cenmle"), function(object, newdata, ...)
+setMethod("predict", signature(object="cenmle"), 
+          function(object, newdata, conf.int=FALSE, ...)
 {
     predict(object@survreg, newdata, ...)
 })
@@ -127,7 +128,7 @@ function(formula, dist, ...)
 # as an interval between zero and the DL.  They cannot simply be stated as
 # 'left' censored, because that allows some probability of going below 0,
 # and estimates will be biased low and wrong.  So with the normal option
-# and left censoring, internally we must interval censoring.  The end of
+# and left censoring, internally we must use interval censoring.  The end of
 # the interval are the detected values.  The start of the interval will
 # have identical numbers in it for the detects, and a 0 for the 
 # nondetects (a simple trick is: start = obs - obs * censored).

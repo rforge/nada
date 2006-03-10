@@ -101,6 +101,8 @@ censored environmental data.  John Wiley and Sons, USA, NJ.
     
     # Formula interface -- no groups
     cenmle(Cen(obs, censored)) 
+    # assume a gaussian distribution
+    #cenmle(Cen(obs, censored), dist="gaussian") 
 
     # Formula interface -- a complicated regression
     attach(TCEReg)

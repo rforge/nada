@@ -11,6 +11,7 @@ export(
     "cenfit",
     "cendiff",
     "cenmle",
+    "cenreg",
     "cenros",
     "ros",
     "lros",

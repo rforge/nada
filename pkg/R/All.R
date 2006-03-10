@@ -1,8 +1,8 @@
 ###
 # NADA for R by Lopaka Lee.
 #
-# Version 1.2-1
-# Copyright (2004, 2005) Lopaka Lee
+# Version 1.3-0
+# Copyright (2004, 2005, 2006) Lopaka Lee
 #
 # A S-language software module based on 
 # methodologies described by Dennis R. Helsel in his book 
