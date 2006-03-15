@@ -2,10 +2,25 @@
 \alias{cenmle}
 \alias{cenreg}
 \title{
-    Maximum Likelihood Estimation Regression for Left-censored Data
+    Regression by Maximum Likelihood Estimation for Left-censored Data
 }
 \description{
-    Maximum Likelihood Estimation (MLE) regression for a parametric model. 
+
+     Regression by Maximum Likelihood (ML) Estimation for left-censored
+     ("nondetect" or "less-than") data.  This routine computes regression
+     estimates of slope(s) and intercept by maximum likelihood
+     when data are left-censored.  It will compute ML estimates of
+     descriptive statistics when explanatory variables following the ~
+     are left blank.  It will compute ML tests similar in function and
+     assumptions to two-sample t-tests and analysis of variance when
+     groups are specified following the ~.  It will compute regression
+     equations, including multiple regression, when continuos explanatory
+     variables are included following the ~.  It will compute the ML
+     equivalent of analysis of covariance when both group and continuous
+     explanatory variables are specified following the ~.  To avoid
+     an appreciable loss of power with regression and group hypothesis
+     tests, a probability plot of residuals should be checked to ensure
+     that residuals from the regression model are approximately gaussian.
 }
 \synopsis{cenmle(obs, censored, groups, ...)}
 \usage{

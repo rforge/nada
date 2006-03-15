@@ -19,9 +19,10 @@ setClass("cenfit", representation(survfit="survfit"))
 # cenfit for formulas
 setMethod("cenfit", 
           signature(obs="formula", censored="missing", groups="missing"), 
-          function(obs, censored, groups, ...)
+          function(obs, censored, groups, conf.type, ...)
 {
-    sf = survfit(flip(obs), ...)
+    conf.type = ifelse(missing(conf.type), "plain", conf.type)
+    sf = survfit(flip(obs), conf.type=conf.type, ...)
 
     cenObj = eval(obs[[2]], environment(obs))
     sf$time = cenObj@flipFactor - sf$time 
@@ -356,6 +357,10 @@ setMethod("summary", signature(object="cenfit"),
                        s$surv, s$std.err, s$lower, s$upper)
       names(ret) = c("obs", "n.risk", "n.event", 
                      "prob", "std.err", LCL(x), UCL(x))
+
+      # The std.err in survfit object is not the real s.e.!
+      ret$std.err = ret$std.err * ret$prob
+
       return(ret)
     }
 

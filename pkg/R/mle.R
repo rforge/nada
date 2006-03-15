@@ -58,11 +58,13 @@ setMethod("summary", signature(object="cenmle"), function(object, ...)
     summary(object@survreg, ...)
 })
 
-setMethod("predict", signature(object="cenmle"), 
-          function(object, newdata, conf.int=FALSE, ...)
-{
-    predict(object@survreg, newdata, ...)
-})
+setMethod("predict", signature(object="cenmle"), summary) 
+
+#setMethod("predict", signature(object="cenmle"), 
+#          function(object, newdata, conf.int=FALSE, ...)
+#{
+#    predict(object@survreg, newdata, ...)
+#})
 
 setMethod("residuals", signature(object="cenmle"), function(object, ...)
 {
@@ -77,38 +79,38 @@ setMethod("coef", signature(object="cenmle"), function(object, ...)
 setMethod("median", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    (exp(x@survreg$coef))
+    as.vector(exp(x@survreg$coef))
 })
 
 setMethod("sd", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
     ret = exp(2*x@survreg$coef + x@survreg$scale^2)*(exp(x@survreg$scale^2)-1)
-    (sqrt(ret))
+    as.vector(sqrt(ret))
 })
 
 setMethod("mean", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    (exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
+    as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
 })
 
 setMethod("median", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    (x@survreg$coef)
+    as.vector(x@survreg$coef)
 })
 
 setMethod("sd", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    (x@survreg$scale)
+    as.vector(x@survreg$scale)
 })
 
 setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
-    (x@survreg$coef)
+    as.vector(x@survreg$coef)
 })
 
 
