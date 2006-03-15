@@ -42,14 +42,6 @@ setMethod("cenmle",
           signature(obs="numeric", censored="logical", groups="factor"), 
           cencen.vectors.groups)
 
-#setMethod("print", signature(x="cenmle"), function(x, ...)
-#{
-#    ret = c(mean(x), median(x), sd(x))
-#    names(ret) = c("mean", "median", "sd")
-#    print(ret)
-#    invisible(ret)
-#})
-
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
     # To do: modify the call object to reflect the NADA call
@@ -57,6 +49,18 @@ setMethod("summary", signature(object="cenmle"), function(object, ...)
     object@survreg$call = NULL
     summary(object@survreg, ...)
 })
+
+setMethod("print", signature(x="cenmle"), function(x, ...)
+{
+    print(summary(x, ...))
+
+    ## This is nice, but it doesn't work with strata
+    #ret = c(mean(x), median(x), sd(x))
+    #names(ret) = c("mean", "median", "sd")
+    #print(ret)
+    #invisible(ret)
+})
+
 
 setMethod("predict", signature(object="cenmle"), summary) 
 
