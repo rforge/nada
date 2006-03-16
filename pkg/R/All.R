@@ -51,11 +51,19 @@ setGeneric("pexceed", function(object, ...) standardGeneric("pexceed"))
 
 setGeneric("lines", function(x, ...) standardGeneric("lines"))
 
-setGeneric("transform", function(x, ...) standardGeneric("transform"))
-
 setGeneric("residuals", function(object, ...) standardGeneric("residuals"))
 
 setGeneric("coef", function(object, ...) standardGeneric("coef"))
+
+#if (as.numeric(version$minor) < 3) {
+#    if (!isGeneric("transform"))
+#      setGeneric("transform", function(x, ...) standardGeneric("transform"))
+#} else {
+#    if (!isGeneric("transform"))
+#      setGeneric("transform", function(`_data`, ...)
+#                 standardGeneric("transform"))
+#}
+
 
 ## Classes
 
