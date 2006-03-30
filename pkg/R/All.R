@@ -51,6 +51,11 @@ setGeneric("pexceed", function(object, ...) standardGeneric("pexceed"))
 
 setGeneric("lines", function(x, ...) standardGeneric("lines"))
 
+## Broken for the time being
+#setGeneric("abline", 
+#           function(a, b, h, v, reg, coef, untf, col, lty, lwd, ...) 
+#           standardGeneric("abline"))
+
 setGeneric("residuals", function(object, ...) standardGeneric("residuals"))
 
 setGeneric("coef", function(object, ...) standardGeneric("coef"))

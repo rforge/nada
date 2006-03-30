@@ -1,7 +1,7 @@
 import("survival")
 
 importFrom("stats", "sd", "median", "quantile", "residuals", "coef")
-importFrom("graphics", "plot", "abline", "lines")
+importFrom("graphics", "plot", "abline", "lines", "boxplot")
 
 export(
     "NADAprobs",
@@ -29,6 +29,7 @@ exportClasses(
 exportMethods(
     "print",
     "plot",
+    "boxplot",
     "summary",
     "mean",
     "sd",
@@ -39,6 +40,7 @@ exportMethods(
     "flip",
     "asSurv",
     "lines",
+#    "abline",
     "coef",
     "residuals")
 

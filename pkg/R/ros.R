@@ -148,6 +148,13 @@ setMethod("lines", signature(x="ros"), function (x, ...)
     lines(x=minmax.nq, y=predict(x, minmax.nq), ...)
 })
 
+## Broken for the time being -- use lines
+#setMethod("abline", signature(a="ros"), 
+#          function(a, b, h, v, reg, coef, untf, col, lty, lwd, ...) 
+#{
+#    minmax.nq = qnorm(c(min(a$pp), max(a$pp)))
+#    lines(x=minmax.nq, y=predict(a, minmax.nq), ...)
+#})
 
 # Constructs a prob-plot representation of a ROS model
 setMethod("plot", signature(x="ros", y="missing"),
@@ -224,6 +231,12 @@ setMethod("plot", signature(x="ros", y="missing"),
       }
 })
 
+## Note to self -- this is wrong.  Need to construct the boxplot object
+#  using our own functions, then call bxp()
+setMethod("boxplot", signature(x="ros"), function(x, ...)
+{
+    boxplot(x$modeled, ...)
+})
 
 ## Routines for calculating Helsel-Cohn style plotting positions
 
