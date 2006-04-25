@@ -1,0 +1,21 @@
+All:
+    Handle NAs gracefully
+    Better method documentation
+
+Ros:
+    cenros.print method is simplified ros.print
+    abline is broken
+    plot without plotting of points
+    points method
+    boxplot method
+
+Cen:
+    flip factor should be larger than min
+
+KM:
+    boxplot method
+
+MLE:
+    cenmle:
+        cenmle.control = survreg.control
+
