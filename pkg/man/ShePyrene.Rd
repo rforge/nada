@@ -5,20 +5,19 @@
 \usage{data(ShePyrene)}
 \source{
 She, N., 1997, Analyzing censored water quality data using a nonparametric
-approach:  Journal of the American Water Resources Association 33,
-615–624..
+approach.  Journal of the American Water Resources Association, 33, pp615--624.
 }
 \description{
-Pyrene concentrations (mg/L) at 20 monitoring stations in Puget Sound, WA, USA
+Pyrene concentrations in milligrams per liter from 20 water-quality
+monitoring stations in the Puget Sound of Washington State, USA.
 
-For characterizing priority pollutant concentrations in sediments of
-Puget Sound by computing summary statistics.  Contains eight detection
-limits with 11 nondetects out of 56 measurements.
+Used for characterizing priority pollutant concentrations in sediments
+of Puget Sound by computing summary statisitics.  Contains eight detection
+limits with 11 nondetects out of 56 total measurements.
 }
 \references{
 She, N., 1997, Analyzing censored water quality data using a nonparametric
-approach:  Journal of the American Water Resources Association 33,
-615–624..
+approach.  Journal of the American Water Resources Association, 33, pp615--624.
 
 Helsel, Dennis R. (2005).  Nondectects and Data Analysis; Statistics
 for censored environmental data.  John Wiley and Sons, USA, NJ.
