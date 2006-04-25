@@ -19,3 +19,5 @@ MLE:
     cenmle:
         cenmle.control = survreg.control
 
+    print method needs to handle strata
+

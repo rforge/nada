@@ -76,23 +76,17 @@ function(x)
 
 setMethod("print", signature(x="ros"), function(x, ...)
 {
-    cat("\nMultiply-Censored ROS Model\n\n")
+    n       = length(x$modeled)
+    n.cen   = length(x$modeled[x$censored])
+    median  = median(x)
+    mean    = mean(x)
+    sd      = sd(x)
 
-    uncen.n = length(x$modeled[!x$censored])
-    cen.n   = length(x$modeled[x$censored])
+    ret = c(n, n.cen, median, mean, sd)
+    names(ret) = c("n", "n.cen", "median", "mean", "sd")
 
-    cat("           N:", (uncen.n + cen.n), "\n")
-    cat("    Censored:", cen.n, "\n")
-    cat("  % Censored:", format((cen.n/(cen.n+uncen.n))*100, digits=4), "\n")
-    cat("\n");
-    
-    cat("        Mean:", format(mean(x), digits=4), "\n")
-    cat("      StdDev:", format(sd(x), digits=4), "\n")
-    cat("\n");
-    cat("   Quantiles:\n")
-    print(quantile(x))
-    cat("\n");
-    cat("Use summary() to view the linear regression model\n\n")
+    print(ret)
+    invisible(ret)
 })
 
 setMethod("summary", "ros", function(object, plot=FALSE, ...)

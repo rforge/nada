@@ -9,7 +9,7 @@ setGeneric("cenmle",
 
 setOldClass("survreg")
 
-setClass("cenmle", representation(survreg="survreg"))
+setClass("cenmle", representation( survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
 
@@ -52,13 +52,18 @@ setMethod("summary", signature(object="cenmle"), function(object, ...)
 
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
-    print(summary(x, ...))
-
     ## This is nice, but it doesn't work with strata
-    #ret = c(mean(x), median(x), sd(x))
-    #names(ret) = c("mean", "median", "sd")
-    #print(ret)
-    #invisible(ret)
+    n       = length(x@survreg$linear)
+    n.cen   = NA
+    median  = median(x)
+    mean    = mean(x)
+    sd      = sd(x)
+
+    ret = c(n, n.cen, median, mean, sd)
+    names(ret) = c("n", "n.cen", "median", "mean", "sd")
+
+    print(ret)
+    invisible(ret)
 })
 
 
