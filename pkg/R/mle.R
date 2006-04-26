@@ -9,7 +9,7 @@ setGeneric("cenmle",
 
 setOldClass("survreg")
 
-setClass("cenmle", representation( survreg="survreg"))
+setClass("cenmle", representation(ceninfo="ceninfo", survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
 
@@ -23,11 +23,15 @@ setMethod("cenmle",
                     function(obs, censored, groups, dist, ...)
 {
     dist = ifelse(missing(dist), "lognormal", dist)
-    switch(dist,
+    ret = switch(dist,
         gaussian  = new_cenmle_gaussian(obs, dist, ...),
         lognormal = new_cenmle_lognormal(obs, dist, ...),
         survreg(asSurv(obs), dist=dist, ...)
     )
+
+    ret@ceninfo = ceninfo(obs)
+
+    return(ret)
 })
 
 setMethod("cenmle", 
