@@ -9,7 +9,7 @@ setGeneric("cenmle",
 
 setOldClass("survreg")
 
-setClass("cenmle", representation(ceninfo="ceninfo", survreg="survreg"))
+setClass("cenmle", representation("ceninfo", survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
 
@@ -44,7 +44,7 @@ setMethod("cenmle",
 
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
-    object@survreg$call = object@ceninfo@call
+    object@survreg$call = object@call
     summary(object@survreg, ...)
 })
 
@@ -128,9 +128,9 @@ setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 new_cenmle_lognormal =
 function(formula, dist, ...)
 {
-    new("cenmle-lognormal", 
-        ceninfo=ceninfo(formula),
-        survreg=survreg(asSurv(formula), dist=dist, ...))
+    cenmle = new("cenmle", ceninfo(formula),
+                 survreg=survreg(asSurv(formula), dist=dist, ...))
+    new("cenmle-lognormal", cenmle)
 }
 
 # cenmle for gaussian, or normal, distributions
@@ -154,8 +154,9 @@ function(formula, dist, ...)
     f = as.formula(substitute(Surv(o - o * c, o, type="interval2")~g, 
                                    list(o=obs, c=censored, g=groups)))
     environment(f) = parent.frame()
-    new("cenmle-gaussian", 
-        ceninfo=ceninfo(formula), survreg=survreg(f, dist=dist, ...))
+    cenmle = new("cenmle", 
+                 ceninfo(formula), survreg=survreg(f, dist=dist, ...))
+    new("cenmle-gaussian", cenmle)
 }
 
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section
