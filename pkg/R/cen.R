@@ -13,7 +13,8 @@ setOldClass("Surv")
 setClass("Cen", representation(Surv="Surv", flipFactor="numeric"))
 
 setClass("ceninfo", 
-         representation(n="numeric", n.cen="numeric", groups="character"))
+         representation(n="numeric", n.cen="numeric", groups="character",
+                        call="formula"))
 
 ## Methods
 
@@ -99,10 +100,9 @@ function(formula)
     n      = length(eval(vars[[2]][[2]]))
     n.cen  = length(which(eval(vars[[2]][[3]]) == TRUE))
     groups = ifelse(length(vars) <= 2, character(), levels(eval(vars[[3]])))
+    call   = formula
 
-    if (length(vars) > 2) groups = levels(eval(vars[[3]]))
-
-    new("ceninfo", n=n, n.cen=n.cen, groups=groups)
+    new("ceninfo", n=n, n.cen=n.cen, groups=groups, call=call)
 }
 ## End ceninfo routines
 

@@ -23,15 +23,11 @@ setMethod("cenmle",
                     function(obs, censored, groups, dist, ...)
 {
     dist = ifelse(missing(dist), "lognormal", dist)
-    ret = switch(dist,
+    switch(dist,
         gaussian  = new_cenmle_gaussian(obs, dist, ...),
         lognormal = new_cenmle_lognormal(obs, dist, ...),
         survreg(asSurv(obs), dist=dist, ...)
     )
-
-    ret@ceninfo = ceninfo(obs)
-
-    return(ret)
 })
 
 setMethod("cenmle", 
@@ -48,9 +44,7 @@ setMethod("cenmle",
 
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
-    # To do: modify the call object to reflect the NADA call
-    # for now, just nullify it -- users typically remember the call.
-    #object@survreg$call = NULL
+    object@survreg$call = object@ceninfo@call
     summary(object@survreg, ...)
 })
 
@@ -134,7 +128,9 @@ setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 new_cenmle_lognormal =
 function(formula, dist, ...)
 {
-    new("cenmle-lognormal", survreg=survreg(asSurv(formula), dist=dist, ...))
+    new("cenmle-lognormal", 
+        ceninfo=ceninfo(formula),
+        survreg=survreg(asSurv(formula), dist=dist, ...))
 }
 
 # cenmle for gaussian, or normal, distributions
@@ -158,7 +154,8 @@ function(formula, dist, ...)
     f = as.formula(substitute(Surv(o - o * c, o, type="interval2")~g, 
                                    list(o=obs, c=censored, g=groups)))
     environment(f) = parent.frame()
-    new("cenmle-gaussian", survreg=survreg(f, dist=dist, ...))
+    new("cenmle-gaussian", 
+        ceninfo=ceninfo(formula), survreg=survreg(f, dist=dist, ...))
 }
 
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section

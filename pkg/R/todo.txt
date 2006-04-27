@@ -1,23 +1,24 @@
 All:
-    Handle NAs gracefully
-    Better method documentation
+    x a common ceninfo class and methods
+    o Handle NAs gracefully
+    o Better method documentation
 
 Ros:
-    cenros.print method is simplified ros.print
-    abline is broken
-    plot without plotting of points
-    points method
-    boxplot method
+    x cenros.print method is simplified ros.print
+    o abline is broken
+    o plot without plotting of points
+    o points method
+    o boxplot method
 
 Cen:
-    flip factor should be larger than min
+    o flip factor should be larger than min
 
 KM:
-    boxplot method
+    o boxplot method
 
 MLE:
-    cenmle:
+    o cenmle:
         cenmle.control = survreg.control
 
-    print method needs to handle strata
+    o print method needs to handle strata
 
