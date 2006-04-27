@@ -97,10 +97,20 @@ ceninfo =
 function(formula)
 {
     vars   = attr(terms(formula), "variables")
-    n      = length(eval(vars[[2]][[2]]))
-    n.cen  = length(which(eval(vars[[2]][[3]]) == TRUE))
-    groups = ifelse(length(vars) <= 2, character(), levels(eval(vars[[3]])))
-    call   = formula
+    #obs = vars[[2]][[2]]
+    #cen = vars[[2]][[3]]
+
+    if (length(vars) <= 2) 
+      {
+        n      = length(eval(vars[[2]][[2]]))
+        n.cen  = length(which(eval(vars[[2]][[3]]) == TRUE))
+        call   = formula
+      }
+    else
+      {
+        groups = levels(eval(vars[[3]]))
+
+      }
 
     new("ceninfo", n=n, n.cen=n.cen, groups=groups, call=call)
 }

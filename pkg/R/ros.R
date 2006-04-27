@@ -227,10 +227,10 @@ setMethod("plot", signature(x="ros", y="missing"),
 
 ## Note to self -- this is wrong.  Need to construct the boxplot object
 #  using our own functions, then call bxp()
-setMethod("boxplot", signature(x="ros"), function(x, ...)
-{
-    boxplot(x$modeled, ...)
-})
+#setMethod("boxplot", signature(x="ros"), function(x, ...)
+#{
+#    boxplot(x$modeled, ...)
+#})
 
 ## Routines for calculating Helsel-Cohn style plotting positions
 

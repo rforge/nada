@@ -51,8 +51,8 @@ setMethod("summary", signature(object="cenmle"), function(object, ...)
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
     ## This is nice, but it doesn't work with strata
-    n       = length(x@survreg$linear)
-    n.cen   = NA
+    n       = x@n
+    n.cen   = x@n.cen
     median  = median(x)
     mean    = mean(x)
     sd      = sd(x)

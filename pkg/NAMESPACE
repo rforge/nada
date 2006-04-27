@@ -29,7 +29,7 @@ exportClasses(
 exportMethods(
     "print",
     "plot",
-    "boxplot",
+#    "boxplot",
     "summary",
     "mean",
     "sd",
