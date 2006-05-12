@@ -49,8 +49,7 @@ setMethod("cendiff",
 {
     x = survival::survdiff(flip(obs), rho=rho, ...)
     # To do: modify the call object to reflect cenfit call
-    # for now, just nullify it -- users typically remember the call.
-    x$call = NULL
+    #x$call = NULL
     return(x)
 })
 

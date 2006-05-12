@@ -1,5 +1,4 @@
 All:
-    x a common ceninfo class and methods
     o Handle NAs gracefully
     o Better method documentation
 
@@ -9,16 +8,24 @@ Ros:
     o plot without plotting of points
     o points method
     o boxplot method
+    o identify method
+    o data that goes along for the ride and is printed in the as.data.frame
+      (this will allow identify)
 
 Cen:
     o flip factor should be larger than min
 
 KM:
     o boxplot method
+    o se(mean) to sd
+    o a pretty plot method
+
+    ! Why doesn't km.median == median for uncensored dataset?
 
 MLE:
     o cenmle:
         cenmle.control = survreg.control
+        cenmle-gaussian assumes a single-level grouping -- fix it
 
     o print method needs to handle strata
 

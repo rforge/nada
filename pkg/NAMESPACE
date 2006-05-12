@@ -13,6 +13,7 @@ export(
     "cenmle",
     "cenreg",
     "cenros",
+"stepfind",
     "ros",
     "lros",
     "hc.ppoints",

@@ -9,7 +9,7 @@ setGeneric("cenmle",
 
 setOldClass("survreg")
 
-setClass("cenmle", representation("ceninfo", survreg="survreg"))
+setClass("cenmle", representation(survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
 
@@ -44,21 +44,19 @@ setMethod("cenmle",
 
 setMethod("summary", signature(object="cenmle"), function(object, ...)
 {
-    object@survreg$call = object@call
     summary(object@survreg, ...)
 })
 
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
-    ## This is nice, but it doesn't work with strata
-    n       = x@n
-    n.cen   = x@n.cen
+    coef    = x@survreg$coefficients
+
     median  = median(x)
     mean    = mean(x)
     sd      = sd(x)
 
-    ret = c(n, n.cen, median, mean, sd)
-    names(ret) = c("n", "n.cen", "median", "mean", "sd")
+    ret = matrix(c(median(x), mean(x), sd(x)), ncol=3, nrow=length(coef),
+                 dimnames=list(names(coef), c("median", "mean", "sd")))
 
     print(ret)
     invisible(ret)
@@ -128,9 +126,7 @@ setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 new_cenmle_lognormal =
 function(formula, dist, ...)
 {
-    cenmle = new("cenmle", ceninfo(formula),
-                 survreg=survreg(asSurv(formula), dist=dist, ...))
-    new("cenmle-lognormal", cenmle)
+    new("cenmle-lognormal", survreg=survreg(asSurv(formula), dist=dist, ...))
 }
 
 # cenmle for gaussian, or normal, distributions
@@ -149,14 +145,14 @@ function(formula, dist, ...)
 {
     obs      = formula[[2]][[2]]
     censored = formula[[2]][[3]]
+
+    ## This assumes a single-level grouping -- fix it!
     groups   = formula[[3]]
 
     f = as.formula(substitute(Surv(o - o * c, o, type="interval2")~g, 
                                    list(o=obs, c=censored, g=groups)))
     environment(f) = parent.frame()
-    cenmle = new("cenmle", 
-                 ceninfo(formula), survreg=survreg(f, dist=dist, ...))
-    new("cenmle-gaussian", cenmle)
+    new("cenmle-gaussian", survreg=survreg(f, dist=dist, ...))
 }
 
 #-->> END Regression on Maximum Likelihood Estimation (MLE) section

@@ -12,10 +12,6 @@ setOldClass("Surv")
 
 setClass("Cen", representation(Surv="Surv", flipFactor="numeric"))
 
-setClass("ceninfo", 
-         representation(n="numeric", n.cen="numeric", groups="character",
-                        call="formula"))
-
 ## Methods
 
 # Cen() is analgous to Surv() in survival package.
@@ -91,30 +87,6 @@ function(obs, censored, groups, ...)
     callGeneric(f, ...)
 }
 ## End cencen.* routines
-
-## Begin ceninfo routines
-ceninfo =
-function(formula)
-{
-    vars   = attr(terms(formula), "variables")
-    #obs = vars[[2]][[2]]
-    #cen = vars[[2]][[3]]
-
-    if (length(vars) <= 2) 
-      {
-        n      = length(eval(vars[[2]][[2]]))
-        n.cen  = length(which(eval(vars[[2]][[3]]) == TRUE))
-        call   = formula
-      }
-    else
-      {
-        groups = levels(eval(vars[[3]]))
-
-      }
-
-    new("ceninfo", n=n, n.cen=n.cen, groups=groups, call=call)
-}
-## End ceninfo routines
 
 ## Utility functions
 
