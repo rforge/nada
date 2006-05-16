@@ -109,6 +109,18 @@ function(v, qual.symbol = "<")
                 qual.index   = qual.index,
                 unqual.index = unqual.index))
 }
+split_qual =
+function(v, qual.symbol = "<")
+{
+    v = as.character(v)
+
+    obs = as.numeric(sub(qual.symbol, "", v))
+    cen = rep(FALSE, length(obs))
+    cen[grep(qual.symbol, v)] = TRUE 
+
+    return(list(obs=obs, cen=cen))
+}
+
 
 ## pct.censored  -- Simple function to save some typing
 pct.censored =
@@ -121,6 +133,7 @@ function(obs, censored)
 
     return(100*(length(obs[censored])/length(obs)))
 }
+pct.cen = pct.censored
 
 #-->> END general utility functions
 

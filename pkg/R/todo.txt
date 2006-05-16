@@ -1,6 +1,7 @@
 All:
     o Handle NAs gracefully
     o Better method documentation
+    o splitQual = split_qual returns obs and censored vectors
 
 Ros:
     x cenros.print method is simplified ros.print
@@ -21,6 +22,7 @@ KM:
     o a pretty plot method
 
     ! Why doesn't km.median == median for uncensored dataset?
+    ! data parameter doesn't get passed in cenfit
 
 MLE:
     o cenmle:
