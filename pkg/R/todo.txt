@@ -1,14 +1,15 @@
 All:
     o Handle NAs gracefully
     o Better method documentation
-    o splitQual = split_qual returns obs and censored vectors
+    x splitQual = split_qual returns obs and censored vectors
 
 Ros:
     x cenros.print method is simplified ros.print
     o abline is broken
     o plot without plotting of points
     o points method
-    o boxplot method
+    - boxplot method
+        o outlier calculation
     o identify method
     o data that goes along for the ride and is printed in the as.data.frame
       (this will allow identify)
@@ -20,6 +21,7 @@ KM:
     o boxplot method
     o se(mean) to sd
     o a pretty plot method
+    x pexceed needs to swap UCL and LCL.
 
     ! Why doesn't km.median == median for uncensored dataset?
     ! data parameter doesn't get passed in cenfit

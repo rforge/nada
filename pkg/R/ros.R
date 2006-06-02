@@ -117,6 +117,20 @@ setMethod("sd", signature(x="ros"), function(x, na.rm=FALSE)
 
 setMethod("median", "ros", function(x, na.rm=FALSE) median(x$modeled))
 
+
+### min and max methods don't work yet cuz I don't know how to eval
+##  the expanded dots correctly yet.
+#setMethod("min", "ros", function(..., na.rm=FALSE) 
+#{
+#    x = match.call(expand.dots=TRUE)[[2]]
+#    min(eval.parent(x$modeled))
+#})
+#setMethod("max", "ros", function(..., na.rm=FALSE) 
+#{
+#    x = match.call(expand.dots=TRUE)[[2]]
+#    max(eval.parent(x$modeled))
+#})
+
 ## Query and prediction functions for ROS objects
 
 setMethod("quantile", signature(x="ros"), function(x, probs=NADAprobs,...)
@@ -225,12 +239,19 @@ setMethod("plot", signature(x="ros", y="missing"),
       }
 })
 
-## Note to self -- this is wrong.  Need to construct the boxplot object
-#  using our own functions, then call bxp()
-#setMethod("boxplot", signature(x="ros"), function(x, ...)
-#{
-#    boxplot(x$modeled, ...)
-#})
+setMethod("boxplot", signature(x="ros"), function(x, log="y", range=0,...)
+{
+    # use boxplot.default instead
+    bx = boxplot(x$modeled, plot=FALSE, range=range, ...)
+
+    # The vector stats is the famous five -- with outlier limts.
+    # We relpace the quantiles with the ros-modeled ones
+    bx$stats[2:4] = as.vector(quantile(x, c(0.25, 0.5, 0.75)))
+    bx$stats = as.matrix(bx$stats)
+
+    bxp(bx, log=log, ...)
+    invisible(bx)
+})
 
 ## Routines for calculating Helsel-Cohn style plotting positions
 

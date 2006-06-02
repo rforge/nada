@@ -43,6 +43,9 @@ setGeneric("sd", function(x, na.rm=FALSE) standardGeneric("sd"))
 
 setGeneric("median", function(x, na.rm=FALSE) standardGeneric("median"))
 
+setGeneric("min", function(..., na.rm=FALSE) standardGeneric("min"))
+setGeneric("max", function(..., na.rm=FALSE) standardGeneric("max"))
+
 setGeneric("quantile", function(x, ...) standardGeneric("quantile"))
 
 setGeneric("predict", function(object, ...) standardGeneric("predict"))
@@ -50,6 +53,8 @@ setGeneric("predict", function(object, ...) standardGeneric("predict"))
 setGeneric("pexceed", function(object, ...) standardGeneric("pexceed"))
 
 setGeneric("lines", function(x, ...) standardGeneric("lines"))
+
+setGeneric("boxplot", function(x, ...) standardGeneric("boxplot"))
 
 ## Broken for the time being
 #setGeneric("abline", 
@@ -90,25 +95,9 @@ setMethod("print", signature("NADAlist"), function(x, ...)
 #-->> BEGIN general utility functions
 
 ##
-# splitQual extracts qualifed and unqualifed vectors from a vector
+# split_qual extracts qualifed and unqualifed vectors from a vector
 # containing concatenated qualifiying characters and numeric values
 # like "<0.5".  Only handles one kind of censoring character/symbol.
-splitQual =
-function(v, qual.symbol = "<")
-{
-    qual.index = grep(qual.symbol, x=as.character(v))  
-
-    qual.chars = as.character(v[qual.index])
-    qual = as.numeric(sub(qual.symbol, "", qual.chars))
-
-    unqual.index = -1 * qual.index
-    unqual = as.numeric(as.character(v[unqual.index]))
-    
-    return(list(qual         = qual, 
-                unqual       = unqual, 
-                qual.index   = qual.index,
-                unqual.index = unqual.index))
-}
 split_qual =
 function(v, qual.symbol = "<")
 {
@@ -120,10 +109,10 @@ function(v, qual.symbol = "<")
 
     return(list(obs=obs, cen=cen))
 }
+splitQual = split_qual
 
-
-## pct.censored  -- Simple function to save some typing
-pct.censored =
+## pct_cen -- Simple function to save some typing
+pct_cen =
 function(obs, censored)
 {
     if (!is.logical(censored)) 
@@ -133,7 +122,6 @@ function(obs, censored)
 
     return(100*(length(obs[censored])/length(obs)))
 }
-pct.cen = pct.censored
 
 #-->> END general utility functions
 
