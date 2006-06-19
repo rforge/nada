@@ -56,6 +56,9 @@ setGeneric("lines", function(x, ...) standardGeneric("lines"))
 
 setGeneric("boxplot", function(x, ...) standardGeneric("boxplot"))
 
+setGeneric("cor", function(x, y = NULL, use = "all.obs",
+          method = c("pearson", "kendall", "spearman")) standardGeneric("cor"))
+
 ## Broken for the time being
 #setGeneric("abline", 
 #           function(a, b, h, v, reg, coef, untf, col, lty, lwd, ...) 

@@ -322,13 +322,14 @@ setMethod("print", signature(x="cenfit"), function(x, ...)
       n      = s$n
       cen    = s$n - sum(s$n.event)
       median = median(x)
-      mean   = mean(x)
+      mean   = mean(x)[1]
+      sd     = sd(x)
 
-      return(c(n, cen, median, mean))
+      return(c(n, cen, median, mean, sd))
     }
 
     ret = NULL
-    tag = c("n", "n.cen", "median", "mean", "se(mean)")
+    tag = c("n", "n.cen", "median", "mean", "sd")
 
     if (is.null(s$strata))
       {
@@ -384,7 +385,5 @@ setMethod("summary", signature(object="cenfit"),
 
     return(ret)
 })
-
-
 
 #-->> END Kaplan-Mier based functions
