@@ -4,28 +4,23 @@ All:
     o Handle NAs gracefully
         o na.action method
     o Better method documentation
-    x splitQual = split_qual returns obs and censored vectors
     o single-vector input
 
 Ros:
-    x cenros.print method is simplified ros.print
     o abline is broken
     o plot without plotting of points
     o points method
-    x boxplot method
     o identify method
     o data that goes along for the ride and is printed in the as.data.frame
       (this will allow identify)
     o the output data needs an index to get it back to original ordering
 
 Cen:
-    o flip factor should be larger than min
+    x flip factor should be larger than min (!need to validate this change)
 
 KM:
     o boxplot method
-    x se(mean) to sd
     o a pretty plot method
-    x pexceed needs to swap UCL and LCL.
 
     ! Why doesn't km.median == median for uncensored dataset?
     ! data parameter doesn't get passed in cenfit
@@ -35,12 +30,10 @@ MLE:
     o cenmle:
         cenmle.control = survreg.control
     o print method needs to handle strata
-    x better print.summary.cenmle
 
 *** FEATURE ISSUES
 
 MLE regression:
-    x return the correlation R (likelihood R, eq 11.4 pg 187)
     o check that the examples using the TCE dataset work correctly
     o plotting routine (scattered data and regression)
 

@@ -21,7 +21,8 @@ setClass("Cen", representation(Surv="Surv", flipFactor="numeric"))
 Cen =
 function(obs, censored, type="left")
 {
-    new("Cen", Surv=Surv(obs, !censored, type=type), flipFactor = max(obs))
+    ff = max(obs)+(diff(range(obs))/2) # arbitrary flip factor > max(obs)
+    new("Cen", Surv=Surv(obs, !censored, type=type), flipFactor = ff)
 }
 
 setMethod("print", signature(x="Cen"), function(x, ...) print(x@Surv))

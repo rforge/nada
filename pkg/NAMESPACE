@@ -14,6 +14,8 @@ export(
     "cenmle",
     "cenreg",
     "cenros",
+    "cenken",
+    "kendallATS",
     "stepfind",
     "ros",
     "lros",

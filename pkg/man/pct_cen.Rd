@@ -1,11 +1,11 @@
-\name{pct.censored} 
-\alias{pct.censored} 
+\name{pct_cen} 
+\alias{pct_cen} 
 \title{Calculate the percentage of values censored} 
 \description{
-    \code{pct.censored} is a simple, but convenient, function that calculates
+    \code{pct_cen} is a simple, but convenient, function that calculates
     the percentage of censored values.  
 } 
-\usage{ pct.censored(obs, censored)} 
+\usage{pct_cen(obs, censored)} 
 \arguments{
         \item{obs}{
             A numeric vector of observations.  This includes both censored
@@ -22,7 +22,7 @@
 
 %% Function return values 
 \value{
-    \code{pct.censored} returns a single numeric value representing
+    \code{pct_cen} returns a single numeric value representing
     the percentage of values censored in the ``obs" vector.
 } 
 \author{
@@ -35,6 +35,6 @@
     obs      = c(0.5,    0.5,   1.0,  1.5,   5.0,    10,   100)
     censored = c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE)
 
-    pct.censored(obs, censored) 
+    pct_cen(obs, censored) 
 } 
 \keyword{utilities} 
