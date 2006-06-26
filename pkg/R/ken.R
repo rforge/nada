@@ -60,10 +60,10 @@ setMethod("cenken",
           cenken.bicen)
 
 ## kendallATS function -- the heart of the cenken routines
+#  Original code written by D Lorenz (USGS) for S-Plus
 #
-## Original code written by D Lorenz (USGS) for S-Plus
-## Port to R by Lopaka Lee,  June 2006
-## Requires ktau.f built as a native shared object
+#  Port to R by Lopaka Lee,  June 2006
+#  Requires ktau.f built as a native shared object
 
 # Kendall's tau used as an estimate of the relation between x and y
 #    with the ATS slope estimator (x and y left-censored).
@@ -79,21 +79,6 @@ setMethod("cenken",
 kendallATS = 
 function(x, x.cen, y, y.cen) 
 {
-
-#kendallATS <- function(x, y, na.rm = T) {
-  ## y must be of class lcens.
-  ## x can be class lcens or a vector.
-  ## Error checking.
-  ## Make sure we have enough data.
-#  if(!(class(x) == 'lcens'))
-#    x <- lcens(x, rep(0, length(x)), interval=T)
-#  ## Remove NAs if desired.
-#  if(na.rm) {
-#    OKs <- !is.na(y[,1]) & !is.na(x[,1])
-#    y <- y[OKs,]
-#    x <- x[OKs,]
-#  }
-#  else
   if(any(is.na(x) | is.na(y))) stop("Missing values not allowed")
 
   n <- length(x)
@@ -225,10 +210,11 @@ function(x, x.cen, y, y.cen)
   cx <- 1 - cx
   flipy <- max(yy) - yy + 1
   cy <- 1 - cy
-  slopes <- unlist(lapply(1:10, function(i, y, x)
-                          ((y[i] - y[1:i]) / (x[i] - x[1:i])),
-                          yy * cy, xx * cx)) # substitute zeros for censored values
-  bounds <- range(slopes, na.rm=T)
+  slopes <- unlist(lapply(seq(along=xx), function(i, y, x) 
+                          ((y[i] - y[1:i]) / (x[i] - x[1:i])), 
+                            yy * cy, xx * cx)) 
+                            # substitute zeros for censored values 
+  bounds <- range(slopes[is.finite(slopes)]) 
   iter <- 1000
   result <- .Fortran("ktau",
                      x = as.double(flipx), y = as.double(flipy),

@@ -19,7 +19,7 @@ Cen:
     x flip factor should be larger than min (!need to validate this change)
 
 KM:
-    o boxplot method
+    ? boxplot method
     o a pretty plot method
 
     ! Why doesn't km.median == median for uncensored dataset?
@@ -35,11 +35,14 @@ MLE:
 
 MLE regression:
     o check that the examples using the TCE dataset work correctly
+
     o plotting routine (scattered data and regression)
 
 ATS:
-    o work on porting issues using DL's code
+    x work on porting issues using DL's code
         o return: tau (correlation coef), slope (m), intercept (b), p-value
+        - I get NAs using the Lorenz's bounds modification
+
     o plotting routine (scattered data and regression)
 
         
