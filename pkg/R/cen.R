@@ -125,6 +125,24 @@ function(x, y, val, right=TRUE)
     sapply(val, findStep, x=x, y=y, right=right)
 }
 
+censummary =
+function(obs, censored) 
+{
+    skm  = cenfit(obs, censored)
+    sros = cenros(obs, censored)
+    smle = cenmle(obs, censored)
+
+    med  = c(median(skm), median(sros), median(smle))
+    sd   = c(sd(skm), sd(sros), sd(smle))
+    mean = c(mean(skm)[1], mean(sros), mean(smle)[1])
+
+    len = c(length(obs), length(which(censored == T)), pct_cen(obs, censored))
+    names(len) = c("n", "n.cen", "pct.cen")
+    print(len)
+
+    data.frame(median=med, mean=mean, sd=sd, row.names=c("K-M", "ROS", "MLE"))
+}
+
 ## End utility functions
 
 #-->> END Support routines for survival-analysis based functions 

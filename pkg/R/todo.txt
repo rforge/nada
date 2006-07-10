@@ -21,15 +21,17 @@ Cen:
 KM:
     ? boxplot method
     o a pretty plot method
+    ? move survival stuff from cen.R to km.R
 
     ! Why doesn't km.median == median for uncensored dataset?
     ! data parameter doesn't get passed in cenfit
 
 MLE:
     ! cenmle-gaussian assumes a single-level grouping -- fix it
+    o print method like ROS and KM (n, n.cen, median, mean, sd)
+    o print method needs to handle strata
     o cenmle:
         cenmle.control = survreg.control
-    o print method needs to handle strata
 
 *** FEATURE ISSUES
 

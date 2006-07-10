@@ -16,6 +16,9 @@ setClass("cenfit", representation(survfit="survfit"))
 
 ## Methods
 
+# Utility functions
+
+
 # cenfit for formulas
 setMethod("cenfit", 
           signature(obs="formula", censored="missing", groups="missing"), 
@@ -220,9 +223,9 @@ setMethod("quantile", signature(x="cenfit"),
 # Private mean method for cenfit objects -- does not handle strata!
 # Given a cenfit or survfit object returns the calculated mean and se(mean)
 .mean.cenfit =
-function(x)
+function(xx)
 {
-    x = x@survfit
+    x = xx@survfit
 
     stime   = x$time
     surv    = x$surv
@@ -259,8 +262,15 @@ function(x)
         varmean = c(hh %*% temp^2)
       }
 
-    ret = c(sum(mean), sqrt(varmean))
-    names(ret) = c("rmean", "se(rmean)")
+    z = 2 * pnorm(x$conf.int)
+
+    mean = sum(mean)
+    mean.se = sqrt(varmean)
+    mean.lcl = mean - mean.se * z
+    mean.ucl = mean + mean.se * z
+
+    ret = c(mean, mean.se, mean.lcl, mean.ucl)
+    names(ret) = c("mean", "se", LCL(xx), UCL(xx))
 
     return(ret)
 }
@@ -282,14 +292,6 @@ setMethod("mean", signature(x="cenfit"), function(x, ...)
     return(ret)
 })
 
-setMethod("median", signature(x="cenfit"), function(x, na.rm=FALSE)
-{
-    # To do: remove NAs?
-    ret = as.vector(quantile(x, 0.5))
-    names(ret) = names(x@survfit$strata)
-    return(ret)
-})
-
 setMethod("sd", signature(x="cenfit"), function(x, na.rm=FALSE)
 {
     # To do: remove NAs?
@@ -307,6 +309,15 @@ setMethod("sd", signature(x="cenfit"), function(x, na.rm=FALSE)
         names(ret) = names(s$strata)
       }
 
+    return(ret)
+})
+
+
+setMethod("median", signature(x="cenfit"), function(x, na.rm=FALSE)
+{
+    # To do: remove NAs?
+    ret = as.vector(quantile(x, 0.5))
+    names(ret) = names(x@survfit$strata)
     return(ret)
 })
 

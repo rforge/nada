@@ -19,6 +19,7 @@ setClass("summary.cenmle", representation("list"))
 # This keeps things consistent with the survival package
 cenreg = cenmle
 
+# The generic formula method that is called from below
 setMethod("cenmle",
           signature(obs="formula", censored="missing", groups="missing"),
                     function(obs, censored, groups, dist, ...)
@@ -72,13 +73,13 @@ setMethod("print", signature(x="cenmle"), function(x, ...)
 })
 
 
-setMethod("predict", signature(object="cenmle"), summary) 
+#setMethod("predict", signature(object="cenmle"), summary) 
 
-#setMethod("predict", signature(object="cenmle"), 
-#          function(object, newdata, conf.int=FALSE, ...)
-#{
-#    predict(object@survreg, newdata, ...)
-#})
+setMethod("predict", signature(object="cenmle"), 
+          function(object, newdata, conf.int=FALSE, ...)
+{
+    predict(object@survreg, newdata, ...)
+})
 
 setMethod("residuals", signature(object="cenmle"), function(object, ...)
 {
@@ -126,7 +127,7 @@ setMethod("cor", signature(x="cenmle"), function(x, y, use, method)
     rloglik(summary(x))
 })
 
-# This is the hideous summary.survreg from the survival package --
+# This is summary.survreg from the survival package --
 # for now we hack it to do what we want. 
 setMethod("print", signature(x="summary.cenmle"), function(x, ...)
 {
