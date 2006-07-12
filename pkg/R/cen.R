@@ -125,7 +125,7 @@ function(x, y, val, right=TRUE)
     sapply(val, findStep, x=x, y=y, right=right)
 }
 
-censummary =
+censtats =
 function(obs, censored) 
 {
     skm  = cenfit(obs, censored)

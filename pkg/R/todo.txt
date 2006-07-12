@@ -43,7 +43,6 @@ MLE regression:
 ATS:
     x work on porting issues using DL's code
         o return: tau (correlation coef), slope (m), intercept (b), p-value
-        - I get NAs using the Lorenz's bounds modification
 
     o plotting routine (scattered data and regression)
 

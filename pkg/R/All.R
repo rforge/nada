@@ -72,6 +72,8 @@ setGeneric("residuals", function(object, ...) standardGeneric("residuals"))
 
 setGeneric("coef", function(object, ...) standardGeneric("coef"))
 
+## Maybe in the future transform() could be a generic 
+#  Remember that transform is different in R minor versions < 3
 #if (as.numeric(version$minor) < 3) {
 #    if (!isGeneric("transform"))
 #      setGeneric("transform", function(x, ...) standardGeneric("transform"))
@@ -87,6 +89,8 @@ setGeneric("coef", function(object, ...) standardGeneric("coef"))
 setClass("NADAlist", "list")
 
 ## Methods
+
+#setMethod("summary", signature(), function(x, ...))
 
 setMethod("print", signature("NADAlist"), function(x, ...)
 {
@@ -116,7 +120,9 @@ function(v, qual.symbol = "<")
 
     return(list(obs=obs, cen=cen))
 }
+
 splitQual = split_qual
+split.qual = split_qual
 
 ## pct_cen -- Simple function to save some typing
 pct_cen =
@@ -130,5 +136,6 @@ function(obs, censored)
     return(100*(length(obs[censored])/length(obs)))
 }
 
+pct.cen = pct_cen
 #-->> END general utility functions
 
