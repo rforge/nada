@@ -19,9 +19,10 @@ export(
     "cenken",
     "kendallATS",
     "stepfind",
-    "censummary",
+    "censtats",
     "ros",
     "lros",
+    "cohn",
     "hc.ppoints",
     "hc.ppoints.cen",
     "hc.ppoints.uncen")

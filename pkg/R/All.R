@@ -28,7 +28,7 @@
 .onLoad = function(lib, pkg) 
 {
     require(methods)
-    library.dynam("NADA", pkg, lib)
+    #library.dynam("NADA", pkg, lib)
 }
 
 NADAprobs = c(0.05,0.10,0.25,0.50,0.75,0.90,0.95)
