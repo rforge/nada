@@ -103,6 +103,18 @@ setMethod("print", signature("NADAlist"), function(x, ...)
       }
 })
 
+# Dennis' censored boxplots 
+cenboxplot =
+function(obs, censored, groups, log="y", range=0, ...) 
+{
+  if (missing(groups)) ret = boxplot(obs, log=log, range=range, ...)
+  else                 ret = boxplot(obs~groups, log=log, range=range, ...)
+
+  abline(h=max(obs[censored])) 
+
+  invisible(ret)
+}
+
 #-->> BEGIN general utility functions
 
 ##
@@ -137,5 +149,7 @@ function(obs, censored)
 }
 
 pct.cen = pct_cen
+
+
 #-->> END general utility functions
 

@@ -272,10 +272,7 @@ function(obs, censored)
     if (!any(censored)) pp = ppoints(obs)
     else
       {
-        uncen = obs[!censored]
-        cen   = obs[censored]
-
-        cn = .cohnN(uncen, cen)
+        cn = cohn(obs, censored)
         pp[!censored] = hc.ppoints.uncen(cn=cn)
         pp[censored]  = hc.ppoints.cen(cn=cn)
       }
@@ -283,13 +280,20 @@ function(obs, censored)
     return(pp)
 }
 
-# .cohnN Calculates 'Cohn' numbers -- quantities described by 
+# cohn Calculates "Cohn" Numbers -- quantities described by 
 # Helsel and Cohn's (1988) reformulation of a prob-plotting formula
 # described by Hirsch and Stedinger (1987).
-.cohnN =
-function(uncen, cen)
+# The Cohn Numbers are:
+# A_j   = the number of uncensored obs above the jth threshold.
+# B_j   = the number of observations (cen & uncen) below the lowest threshold.
+# C_j   = the number of censored observations between j and j-1
+# P_j   = the probability of exceeding the jth threshold
+cohn =
+function(obs, censored)
 {
-    alldata = c(uncen, cen)
+    uncen = obs[!censored]
+    cen   = obs[censored]
+
     A = B = C = P = numeric()
 
     limit = sort(unique(cen))
@@ -300,7 +304,7 @@ function(uncen, cen)
     i = length(limit)
 
     A[i] = length(uncen[ uncen >= limit[i] ])
-    B[i] = length(alldata[alldata <= limit[i]])
+    B[i] = length(obs[obs <= limit[i]])
     C[i] = length(cen[ cen == limit[i] ])
     P[i] = A[i]/(A[i] + B[i])
 
@@ -308,12 +312,13 @@ function(uncen, cen)
     while (i > 0)
       {
         A[i] = length(uncen[ uncen >= limit[i] & uncen < limit[i + 1] ])
-        B[i] = length(alldata[alldata <= limit[i]])
-        C[i] = length(cen[ cen == limit[i] ])
+        B[i] = length(obs[obs <= limit[i]])
+        C[i] = length(cen[cen == limit[i]])
         P[i] = P[i + 1] + ((A[i]/(A[i] + B[i])) * (1 - P[i + 1]))
 
         i = i - 1
       }
+
     return(list(A=A, B=B, C=C, P=P, limit=limit))
 }
 
@@ -321,7 +326,7 @@ function(uncen, cen)
 hc.ppoints.uncen =
 function(obs, censored, cn)
 {
-    if (missing(cn)) { cn = .cohnN(obs, censored) }
+    if (missing(cn)) { cn = cohn(obs, censored) }
 
     nonzero = (cn$A != 0)
     A     = cn$A[nonzero]
@@ -350,7 +355,7 @@ function(obs, censored, cn)
 hc.ppoints.cen =
 function(obs, censored, cn)
 {    
-    if (missing(cn)) { cn = .cohnN(obs, censored) }
+    if (missing(cn)) { cn = cohn(obs, censored) }
 
     C     = cn$C
     P     = cn$P

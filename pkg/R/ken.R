@@ -243,7 +243,7 @@ function(x, x.cen, y, y.cen)
   method <- "Kendall's tau with the ATS slope estimator"
   z <- list(method = method, statistic = taub, p.value = p.val,
             estimate = est, alternative="two.sided",
-            coef=coef, slope.se = result$dev)
+            coef=coef, slope.se = result$dev, taua=tau)
   z$data.name <-  paste(deparse(substitute(x)), "and",deparse(substitute(y)))
   oldClass(z) <- "htest"
   return(z)

@@ -52,7 +52,7 @@ setMethod("cendiff",
 {
     x = survival::survdiff(flip(obs), rho=rho, ...)
     # To do: modify the call object to reflect cenfit call
-    #x$call = NULL
+    x$call = NULL
     return(x)
 })
 
@@ -91,7 +91,9 @@ setMethod("plot", signature(x="cenfit"),
 {
     s = x@survfit
     firstx = (min(s$time)*axLimitFactor)
-    plot(s, log=log, firstx=firstx, ylab=ylab, xlab=xlab, lty=lty, ...)
+
+    plot(s, mark.time=FALSE, log=log, firstx=firstx, 
+         ylab=ylab, xlab=xlab, lty=lty, ...)
 })
 
 setMethod("lines", "cenfit", function(x, ...) lines(x@survfit, ...))
