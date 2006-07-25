@@ -16,7 +16,19 @@ setClass("cenfit", representation(survfit="survfit"))
 
 ## Methods
 
-# Utility functions
+setMethod("LCL", 
+          signature(x="cenfit"),
+          function(x) 
+{ 
+    paste(x@survfit$conf.int, "LCL", sep='') 
+})
+
+setMethod("UCL", 
+          signature(x="cenfit"),
+          function(x) 
+{ 
+    paste(x@survfit$conf.int, "UCL", sep='') 
+})
 
 
 # cenfit for formulas
@@ -135,7 +147,7 @@ setMethod("predict", signature(object="cenfit"),
             ret[[i]] = .predict.cenfit(object[i], newdata, conf.int)
           }
         names(ret) = names(s$strata)
-        class(ret) = "NADAlist"
+        class(ret) = "NADAList"
       }
       
     return(ret)
@@ -169,7 +181,7 @@ setMethod("pexceed", signature(object="cenfit"),
             ret[[i]] = predict2pexceed(predict(object[i], newdata, conf.int))
           }
         names(ret) = names(object@survfit$strata)
-        class(ret) = "NADAlist"
+        class(ret) = "NADAList"
       }
     return(ret)
 })
@@ -195,7 +207,7 @@ function(x, newdata, conf.int=FALSE)
 
         ret = data.frame(newdata, quan, quan.l, quan.u)
 
-        names(ret) = c("quantile", "obs", LCL(x), UCL(x))
+        names(ret) = c("quantile", "value", LCL(x), UCL(x))
       }
 
     return(ret)
@@ -216,7 +228,7 @@ setMethod("quantile", signature(x="cenfit"),
             ret[[i]] = .quantile.cenfit(x[i], probs, conf.int)
           }
         names(ret) = names(s$strata)
-        class(ret) = "NADAlist"
+        class(ret) = "NADAList"
       }
 
     return(ret)
@@ -264,7 +276,8 @@ function(xx)
         varmean = c(hh %*% temp^2)
       }
 
-    z = 2 * pnorm(x$conf.int)
+    #z = 2 * pnorm(x$conf.int)
+    z = qnorm(x$conf.int)
 
     mean = sum(mean)
     mean.se = sqrt(varmean)
@@ -288,7 +301,7 @@ setMethod("mean", signature(x="cenfit"), function(x, ...)
       {
         for (i in 1:length(s$strata)) ret[[i]] = .mean.cenfit(x[i])
         names(ret) = names(s$strata)
-        class(ret) = "NADAlist"
+        class(ret) = "NADAList"
       }
 
     return(ret)
@@ -393,10 +406,40 @@ setMethod("summary", signature(object="cenfit"),
       {
         for (i in 1:length(s$strata)) ret[[i]] = strataSummary(object[i])
         names(ret) = names(s$strata)
-        class(ret) = "NADAlist"
+        class(ret) = "NADAList"
       }
 
     return(ret)
 })
+
+## KM utility functions
+
+# stepfind() -- More applicable version of stats::stepfun(). 
+# Used in predict.cenfit() and quantile.cenfit().
+# Given decreasingly ordered x and y vectors of a step function, 
+# find the y value associated with any given x value.  
+# Optionally right or left looking on the number line. 
+stepfind =
+function(x, y, val, right=TRUE) 
+{
+    findStep =
+    function(x, y, val, right)
+    {
+        i = length(x)
+        if (val >= max(x)) return(NA)
+        if (val <= min(x)) return(NA)
+
+        while (as.logical(i)) 
+          {
+            if (x[i] > val || identical(all.equal(x[i], val), TRUE)) break
+            i = i - 1
+          }
+        return(ifelse(right, y[i], y[i+1]))
+    }
+
+    sapply(val, findStep, x=x, y=y, right=right)
+}
+
+## End KM utility functions
 
 #-->> END Kaplan-Mier based functions

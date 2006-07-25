@@ -9,12 +9,27 @@ setGeneric("cenmle",
 
 setOldClass("survreg")
 
-setClass("cenmle", representation(survreg="survreg"))
+setClass("cenmle", representation(conf.int="numeric", survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
 setClass("summary.cenmle", representation("list"))
 
-## Core Methods
+## Methods
+
+setMethod("LCL", 
+          signature(x="cenmle"),
+          function(x) 
+{ 
+    paste(x@conf.int, "LCL", sep='') 
+})
+
+setMethod("UCL", 
+          signature(x="cenmle"),
+          function(x) 
+{ 
+    paste(x@conf.int, "UCL", sep='') 
+})
+
 
 # This keeps things consistent with the survival package
 cenreg = cenmle
@@ -22,14 +37,16 @@ cenreg = cenmle
 # The generic formula method that is called from below
 setMethod("cenmle",
           signature(obs="formula", censored="missing", groups="missing"),
-                    function(obs, censored, groups, dist, ...)
+                    function(obs, censored, groups, dist, conf.int, ...)
 {
     dist = ifelse(missing(dist), "lognormal", dist)
-    switch(dist,
-        gaussian  = new_cenmle_gaussian(obs, dist, ...),
-        lognormal = new_cenmle_lognormal(obs, dist, ...),
-        survreg(asSurv(obs), dist=dist, ...)
+    ret = switch(dist,
+                 gaussian  = new_cenmle_gaussian(obs, dist, ...),
+                 lognormal = new_cenmle_lognormal(obs, dist, ...),
+                 survreg(asSurv(obs), dist=dist, ...)
     )
+    ret@conf.int = conf.int
+    return(ret)
 })
 
 # Use the cencen.* framework (in All.R) to dispatch from these cases
@@ -102,9 +119,95 @@ setMethod("sd", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
     as.vector(sqrt(ret))
 })
 
+setMethod("quantile", signature(x="cenmle-lognormal"),
+          function(x, probs = NADAprobs, conf.int = FALSE, ...)
+{
+    q = probs
+
+    coef   = as.vector(x@survreg$coef)
+    scale  = x@survreg$scale
+
+    qhat = exp(coef + (qnorm(q) * scale))
+
+    if (!conf.int) 
+      {
+        ret = qhat
+        names(ret) = 
+          paste(formatC(100 * q, format = "fg", wid = 1), "%", sep='')
+      }
+    else
+      {
+        semean = sqrt(x@survreg$var[1,1])
+        cov    = x@survreg$var[2,1] * scale
+        varsig = x@survreg$var[2,2] * scale^2
+
+        se = qhat * sqrt(semean^2 + 2*qnorm(q)*cov + (qnorm(q)^2) * varsig)
+
+        # Two-sided prob
+        p = 1-((1-x@conf.int)/2)
+        z = qnorm(p)
+
+        w = exp((z*se)/qhat)
+
+        lcl = qhat/w
+        ucl = qhat*w
+
+        ret = data.frame(q, qhat, lcl, ucl)
+        names(ret) = c("quantile", "value", LCL(x), UCL(x))
+      }
+
+    return(ret)
+})
+
+setMethod("quantile", signature(x="cenmle-gaussian"),
+          function(x, probs = NADAprobs, conf.int = FALSE, ...)
+{
+    q = probs
+
+    coef   = as.vector(x@survreg$coef)
+    scale = x@survreg$scale
+
+    ncp = qnorm(q)
+
+    qhat = coef + (ncp * scale)
+
+    if (!conf.int) ret = qhat
+    else
+      {
+        n  = length(x@survreg$linear.predictors)
+        se = sqrt((scale^2)/n)
+
+        # Two-sided prob
+        p = 1-((1-x@conf.int)/2)
+        z = qt(p, n-1, abs(ncp))
+
+        lcl = qhat - (z * se)
+        ucl = qhat + (z * se)
+
+        ret = data.frame(q, qhat, lcl, ucl)
+        names(ret) = c("quantile", "value", LCL(x), UCL(x))
+      }
+
+    return(ret)
+})
+
 setMethod("mean", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
 {
-    as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
+    # Two-sided prob
+    p = 1-((1-x@conf.int)/2)
+
+    xbar = as.vector(exp(x@survreg$coef + 0.5*(x@survreg$scale)^2))
+    se   = sqrt(x@survreg$var[1,1])
+
+    n     = length(x@survreg$linear.predictors)
+    scale = x@survreg$scale
+    gamz = qnorm(p) * sqrt((scale^2/n) + (((0.5)*scale^4)/(n+1)))
+    bhat = log(xbar)
+
+    ret = c(xbar, se, exp(bhat - gamz), exp(bhat + gamz))
+    names(ret) = c("mean", "se", LCL(x), UCL(x))
+
+    return(ret)
 })
 
 setMethod("median", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
@@ -119,7 +222,20 @@ setMethod("sd", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 
 setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
 {
-    as.vector(x@survreg$coef)
+    # The mean is the intercept
+    xbar = as.vector(x@survreg$coef)
+
+    # The standard error of the intercept/mean
+    se = sqrt(x@survreg$var[1,1])
+
+    # Two-sided prob
+    p = 1-((1-x@conf.int)/2)
+    gamz = qnorm(p) * se
+
+    ret = c(xbar, se, (xbar - gamz), (xbar + gamz))
+    names(ret) = c("mean", "se", LCL(x), UCL(x))
+
+    return(ret)
 })
 
 setMethod("cor", signature(x="cenmle"), function(x, y, use, method)

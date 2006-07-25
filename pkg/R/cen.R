@@ -44,7 +44,6 @@ setMethod("flip", signature(x="Cen"), function(x)
     return(surv)
 })
 
-
 # flip()ing a formula just symbolically updates the 
 # response (which should be a Cen object). 
 # Result is like: flip(Cen(obs, cen))~groups
@@ -88,42 +87,6 @@ function(obs, censored, groups, ...)
     callGeneric(f, ...)
 }
 ## End cencen.* routines
-
-## Utility functions
-
-# LCL() and UCL() return string representations of 
-# the lower and upper conf limits of cenfit object ("0.95LCL")
-LCL =
-function(x) { paste(x@survfit$conf.int, "LCL", sep='') }
-
-UCL =
-function(x) { paste(x@survfit$conf.int, "UCL", sep='') }
-
-# stepfind() -- More applicable version of stats::stepfun(). 
-# Used in predict.cenfit() and quantile.cenfit().
-# Given decreasingly ordered x and y vectors of a step function, 
-# find the y value associated with any given x value.  
-# Optionally right or left looking on the number line. 
-stepfind =
-function(x, y, val, right=TRUE) 
-{
-    findStep =
-    function(x, y, val, right)
-    {
-        i = length(x)
-        if (val >= max(x)) return(NA)
-        if (val <= min(x)) return(NA)
-
-        while (as.logical(i)) 
-          {
-            if (x[i] > val || identical(all.equal(x[i], val), TRUE)) break
-            i = i - 1
-          }
-        return(ifelse(right, y[i], y[i+1]))
-    }
-
-    sapply(val, findStep, x=x, y=y, right=right)
-}
 
 censtats =
 function(obs, censored) 

@@ -63,6 +63,11 @@ setGeneric("boxplot", function(x, ...) standardGeneric("boxplot"))
 setGeneric("cor", function(x, y = NULL, use = "all.obs",
           method = c("pearson", "kendall", "spearman")) standardGeneric("cor"))
 
+# LCL and UCL return string representations of 
+# the lower and upper conf limits of an object (e.g. "0.95LCL")
+setGeneric("LCL", function(x) standardGeneric("LCL"))
+setGeneric("UCL", function(x) standardGeneric("UCL"))
+
 ## Broken for the time being
 #setGeneric("abline", 
 #           function(a, b, h, v, reg, coef, untf, col, lty, lwd, ...) 
@@ -86,13 +91,13 @@ setGeneric("coef", function(object, ...) standardGeneric("coef"))
 
 ## Classes
 
-setClass("NADAlist", "list")
+setClass("NADAList", "list")
 
 ## Methods
 
 #setMethod("summary", signature(), function(x, ...))
 
-setMethod("print", signature("NADAlist"), function(x, ...)
+setMethod("print", signature("NADAList"), function(x, ...)
 {
     tag = names(x)
     for (i in 1:length(x))
@@ -110,9 +115,57 @@ function(obs, censored, groups, log="y", range=0, ...)
   if (missing(groups)) ret = boxplot(obs, log=log, range=range, ...)
   else                 ret = boxplot(obs~groups, log=log, range=range, ...)
 
+  # Draw horiz line at max censored value
   abline(h=max(obs[censored])) 
 
   invisible(ret)
+}
+
+# Dennis' censored xy plots 
+cenxyplot =
+function(x, xcen, y, ycen, log="xy", upch=16, cpch=0, ...) 
+{
+    # Setup plot
+    plot(x, y, log=log, type="n", ...)
+    # Plot uncensored values
+    points(x[!ycen], y[!ycen], pch=upch, ...)
+    # Plot censored values
+    points(x[ycen], y[ycen], pch=cpch, ...)
+}
+
+# A first-cut at a summay function for censored data.  To do: groups.
+censummary =
+function(obs, censored) 
+{
+    smry = 
+    function(obs, cen)
+    {
+        ret = cohn(obs, censored)
+
+        ret$n = length(obs)
+        ret$n.cen = length(obs[censored])
+
+        cat("Summary:\n")
+        props = c(ret$n, ret$n.cen, pct.cen(obs, censored), min(obs), max(obs))
+        names(props) = c("n", "n.cen", "pct.cen", "min", "max")
+        print(props)
+
+        limits = t(data.frame(ret$C, ret$A, ret$P))
+        colnames(limits) = ret$limit
+        rownames(limits) = c("C", "A", "P")
+
+        cat("\nThresholds and counts:\n")
+        print(limits["C",])
+
+        cat("\nUncensored between each threshold:\n")
+        print(limits["A",])
+
+        cat("\ROS probability of exceeding each threshold:\n")
+        print(limits["P",])
+    }
+    ret = smry(obs, censored)
+
+    invisible(ret)
 }
 
 #-->> BEGIN general utility functions
@@ -140,16 +193,12 @@ split.qual = split_qual
 pct_cen =
 function(obs, censored)
 {
-    if (!is.logical(censored)) 
-      {
-        stop("censored indicator must be logical vector!\n")
-      }
+    if (!is.logical(censored)) stop("censored must be logical vector!\n")
 
     return(100*(length(obs[censored])/length(obs)))
 }
 
 pct.cen = pct_cen
-
 
 #-->> END general utility functions
 

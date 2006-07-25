@@ -56,8 +56,8 @@ setMethod("cenken",
           cenken.bicen)
 
 ## kendallATS function -- the heart of the cenken routines
-#  Original S code written by D Lorenz (USGS) for S-Plus.
-#  Port to R and R-native ktau function by L Lee and D Helsel.
+#  Original S code written by D. Lorenz for S-Plus.
+#  Port to R and R-native ktau function by L. Lee and D. Helsel.
 #
 # Kendall's tau used as an estimate of the relation between x and y
 #    with the ATS slope estimator (x and y left-censored).
@@ -65,8 +65,9 @@ setMethod("cenken",
 kendallATS =
 function(x, xcen, y, ycen, tol=1e-7, iter=1e+3) 
 {
-    # Jitter y -- this is only needed in ktau_s but is done here
-    # because the original Fortran code (the "standard") did.
+    # Jitter y so that detects and nondetects don't tie.
+    # This is only needed in ktau_s but is done here
+    # because the original Fortran code (the "standard") does this.
     y = y - (min(y)/1000) * ycen 
 
     iter_s = 
@@ -78,7 +79,6 @@ function(x, xcen, y, ycen, tol=1e-7, iter=1e+3)
           b = c(lb, (lb+ub)/2, ub)
           res = sapply(b, function(i) y - i * x)
           s = apply(res, 2, ktau_s, x=x, xcen=xcen, ycen=ycen)
-
           list(b=b, s=s)
         }
 
@@ -102,30 +102,16 @@ function(x, xcen, y, ycen, tol=1e-7, iter=1e+3)
     k = ktau_b(x, xcen, y, ycen)
     bs = iter_s(k[1], k[2], x, xcen, y, ycen, tol=tol, iter=iter)
 
-    b = bs$b
-    s = bs$s
+    ubs = iter_s(bs$b[2], bs$b[3], x, xcen, y, ycen, tol=tol, iter=iter)
+    lbs = iter_s(bs$b[1], bs$b[2], x, xcen, y, ycen, tol=tol, iter=iter)
 
-    if ( (s[2] != 0) || (abs(b[3] - b[1]) > tol) ) slope = b[2]
-    else
-      {
-       cat("Dropped in to refining slope ...\n")
-       ubs = iter_s(b[2], b[3], x, xcen, y, ycen, tol=tol, iter=iter)
-       lbs = iter_s(b[1], b[2], x, xcen, y, ycen, tol=tol, iter=iter)
-
-       slope = 0.5 * (ubs$b[2] + lbs$b[2])
-      }
+    slope = 0.5 * (ubs$b[2] + lbs$b[2])
     
-    ## Calculate the intercept
-    #res = y - slope * x
-    ## offset residuals to make them positive
-    #offs = abs(min(res)) + 1
-    #res = res + offs
-    ## use ROS to calculate the intercept
-    #int = median(cenros(res, ycen)) - offs
+    ## To do: Calculate the intercept
 
     p_tau = ktau_p(x, xcen, y, ycen)
 
-    return(list(tau=p_tau$tau, slope=slope, p=p_tau$p))
+    new("NADAList", list(tau=p_tau$tau, slope=slope, p=p_tau$p))
 }
 
 ktau_b =
@@ -143,7 +129,7 @@ function (x, xcen, y, ycen)
 ktau_s =
 function(x, xcen, y, ycen)
 {
-    # jitter y
+    # Jitter y so that detects and nondetects don't tie
     #y = y - (min(y)/1000) * ycen
 
     ## Find signs of all x<->y slopes (xy2)
@@ -205,7 +191,9 @@ function (x, xcen, y, ycen)
 
     J <- n * (n - 1)/2
     taub <- kenS/(sqrt(J - tt) * sqrt(J - uu))
+    
     varS <- n * (n - 1) * (2 * n + 5)/18
+
     intg <- 1:n
     dupx <- xx - delx * cx
     dupy <- yy - dely * cy
@@ -276,4 +264,4 @@ function (x, xcen, y, ycen)
     return(list(tau=tau, p=p.val))
 }
 
-
+#-->> END cenken code

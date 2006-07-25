@@ -20,7 +20,7 @@ Cen:
 
 KM:
     ? boxplot method
-    o a pretty plot method
+    - a pretty plot method
     ? move survival stuff from cen.R to km.R
 
     ! Why doesn't km.median == median for uncensored dataset?
@@ -36,14 +36,10 @@ MLE:
 *** FEATURE ISSUES
 
 MLE regression:
-    o check that the examples using the TCE dataset work correctly
-
     o plotting routine (scattered data and regression)
 
 ATS:
-    x work on porting issues using DL's code
-        o return: tau (correlation coef), slope (m), intercept (b), p-value
-
+    o Intercept 
     o plotting routine (scattered data and regression)
 
         
