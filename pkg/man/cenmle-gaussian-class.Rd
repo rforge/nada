@@ -13,6 +13,7 @@
 }
 \section{Slots}{
   \describe{
+    \item{\code{conf.int}:}{Confidence interval associated with the model}
     \item{\code{survreg}:}{Object of class \code{"survreg"}  }
   }
 }
@@ -32,6 +33,7 @@ Class \code{"cenmle"}
 }
 \author{
     Lopaka(Rob) Lee <rclee@usgs.gov>
+    Dennis Helsel <dhelsel@usgs.gov>
 } 
 \seealso{
   \code{\link{cenmle}}

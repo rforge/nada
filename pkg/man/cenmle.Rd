@@ -22,7 +22,9 @@
      tests, a probability plot of residuals should be checked to ensure
      that residuals from the regression model are approximately gaussian.
 }
-\synopsis{cenmle(obs, censored, groups, ...)}
+\synopsis{
+    cenmle(obs, censored, groups, ...)
+}
 \usage{
     cenmle(obs, censored, groups, ...)
 }
@@ -41,7 +43,7 @@
 \item{...}{
     Additional items that are common to this function and the \code{survreg}
     function from the `survival' package.  The most important of which
-    is `dist' (distribution to use).  See Details below.
+    is `dist' and `conf.int'.  See Details below.
 }
 } %arguments
 \details{
@@ -49,10 +51,19 @@
     \code{survival} package.  
     
     There are many additional options that are supported and documented
-    in \code{survfit}.  Only a few have application to the geosciences.
+    in \code{survfit}.  Only a few have relevance to the evironmental
+    sciences.
 
-    The most important option is `dist' which specifies the distributional
+    A very important option is `dist' which specifies the distributional
     model to use in the regression.  The default is `lognormal'.  
+
+    Another important option is `conf.int'.  This is NOT an option to
+    \code{survreg} but is an added feature (due to some arcane details of
+    R it can't be documented above).  The `conf.int' option specifies
+    the level for a two-sided confidence interval on the regression.
+    The default is 0.95.  This interval will be used in when the output
+    object is passed to other generic functions such as \code{mean}
+    and \code{quantile}.  See Examples below.
 
     Also supported is a `gaussian' or a normal distribution.  The use of
     a gaussian distribution requires an interval censoring context for
@@ -109,6 +120,12 @@ censored environmental data.  John Wiley and Sons, USA, NJ.
     median(mycenmle)
     mean(mycenmle)
     sd(mycenmle)
+
+    # With a 0.8 confidence interval 
+    mycenmle = cenmle(obs, censored, conf.int=0.8)
+
+    # Now use the model's confidence interval
+    quantile(mycenmle, conf.int=TRUE)
 
     # With groupings
     groups = as.factor(TCEReg$LandUse)

@@ -19,7 +19,7 @@ setMethod("ros", signature(obs="numeric", censored="logical"),
           function(obs, censored, forwardT = "log", reverseT = "exp")
 {
     if (is.null(forwardT) || is.null(reverseT)) {
-        forwardT = reverseT = ".trueT"
+        forwardT = reverseT = "trueT"
     }
     else if (!exists(forwardT)) {
          stop("Can not find Forward Transformation function: ", forwardT, "\n")
@@ -66,9 +66,9 @@ lros = ros
 # names like cen*
 cenros = ros
 
-#  .trueT is provided so that ros() can be used with no transforms.
+#  trueT is provided so that ros() can be used with no transforms.
 #  (It is a quick hack -- rather than recoding ros and family)
-.trueT =
+trueT =
 function(x)
 {
     return(x)

@@ -276,8 +276,9 @@ function(xx)
         varmean = c(hh %*% temp^2)
       }
 
-    #z = 2 * pnorm(x$conf.int)
-    z = qnorm(x$conf.int)
+    # Two-sided conf interval
+    p = 1-((1-x$conf.int)/2)
+    z = qnorm(p)
 
     mean = sum(mean)
     mean.se = sqrt(varmean)

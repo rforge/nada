@@ -13,6 +13,7 @@
 }
 \section{Slots}{
   \describe{
+    \item{\code{conf.int}:}{Confidence interval associated with the model}
     \item{\code{survreg}:}{Object of class \code{"survreg"}  }
   }
 }

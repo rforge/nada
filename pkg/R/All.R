@@ -110,10 +110,13 @@ setMethod("print", signature("NADAList"), function(x, ...)
 
 # Dennis' censored boxplots 
 cenboxplot =
-function(obs, censored, groups, log="y", range=0, ...) 
+function(obs, censored, group, log=TRUE, range=0, ...) 
 {
-  if (missing(groups)) ret = boxplot(obs, log=log, range=range, ...)
-  else                 ret = boxplot(obs~groups, log=log, range=range, ...)
+  if (log) log="y"
+  else     log=""
+
+  if (missing(group)) ret = boxplot(obs, log=log, range=range, ...)
+  else                 ret = boxplot(obs~group, log=log, range=range, ...)
 
   # Draw horiz line at max censored value
   abline(h=max(obs[censored])) 
@@ -121,16 +124,16 @@ function(obs, censored, groups, log="y", range=0, ...)
   invisible(ret)
 }
 
-# Dennis' censored xy plots 
+# Dennis' censored xy plots -- need to fix this
 cenxyplot =
-function(x, xcen, y, ycen, log="xy", upch=16, cpch=0, ...) 
+function(x, xcen, y, ycen, log="xy", ...) 
 {
     # Setup plot
     plot(x, y, log=log, type="n", ...)
     # Plot uncensored values
-    points(x[!ycen], y[!ycen], pch=upch, ...)
+    points(x[!ycen], y[!ycen], ...)
     # Plot censored values
-    points(x[ycen], y[ycen], pch=cpch, ...)
+    points(x[ycen], y[ycen], ...)
 }
 
 # A first-cut at a summay function for censored data.  To do: groups.
@@ -146,7 +149,7 @@ function(obs, censored)
         ret$n.cen = length(obs[censored])
 
         cat("Summary:\n")
-        props = c(ret$n, ret$n.cen, pct.cen(obs, censored), min(obs), max(obs))
+        props = c(ret$n, ret$n.cen, pctCen(obs, censored), min(obs), max(obs))
         names(props) = c("n", "n.cen", "pct.cen", "min", "max")
         print(props)
 
@@ -174,7 +177,7 @@ function(obs, censored)
 # split_qual extracts qualifed and unqualifed vectors from a vector
 # containing concatenated qualifiying characters and numeric values
 # like "<0.5".  Only handles one kind of censoring character/symbol.
-split_qual =
+splitQual =
 function(v, qual.symbol = "<")
 {
     v = as.character(v)
@@ -186,19 +189,14 @@ function(v, qual.symbol = "<")
     return(list(obs=obs, cen=cen))
 }
 
-splitQual = split_qual
-split.qual = split_qual
-
-## pct_cen -- Simple function to save some typing
-pct_cen =
+## pctCen -- Simple function to save some typing
+pctCen =
 function(obs, censored)
 {
     if (!is.logical(censored)) stop("censored must be logical vector!\n")
 
     return(100*(length(obs[censored])/length(obs)))
 }
-
-pct.cen = pct_cen
 
 #-->> END general utility functions
 

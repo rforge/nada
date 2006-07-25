@@ -6,6 +6,8 @@ All:
     o Better method documentation
     o single-vector input
 
+    o Fix cenxyplot
+
 Ros:
     o abline is broken
     o plot without plotting of points

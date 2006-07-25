@@ -146,6 +146,8 @@ function(x, xcen, y, ycen)
     return(itot)
 }
 
+#  Original S code written by D. Lorenz for S-Plus.
+#  To do: simplify.
 ktau_p =
 function (x, xcen, y, ycen) 
 {

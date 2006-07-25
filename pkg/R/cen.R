@@ -99,7 +99,7 @@ function(obs, censored)
     sd   = c(sd(skm), sd(sros), sd(smle))
     mean = c(mean(skm)[1], mean(sros), mean(smle)[1])
 
-    len = c(length(obs), length(which(censored == T)), pct_cen(obs, censored))
+    len = c(length(obs), length(which(censored == T)), pctCen(obs, censored))
     names(len) = c("n", "n.cen", "pct.cen")
     print(len)
 
