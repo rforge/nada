@@ -9,7 +9,9 @@ setGeneric("cenmle",
 
 setOldClass("survreg")
 
-setClass("cenmle", representation(conf.int="numeric", survreg="survreg"))
+setClass("cenmle", 
+         representation(
+          n="numeric", n.cen="numeric", conf.int="numeric", survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
 setClass("summary.cenmle", representation("list"))
@@ -30,7 +32,6 @@ setMethod("UCL",
     paste(x@conf.int, "UCL", sep='') 
 })
 
-
 # This keeps things consistent with the survival package
 cenreg = cenmle
 
@@ -45,7 +46,15 @@ setMethod("cenmle",
                  lognormal = new_cenmle_lognormal(obs, dist, ...),
                  survreg(asSurv(obs), dist=dist, ...)
     )
+
+    x    = eval.parent(obs[[2]][[2]])
+    xcen = eval.parent(obs[[2]][[3]])
+
+    ret@n = length(x)
+    ret@n.cen = length(x[xcen])
+
     ret@conf.int = conf.int
+
     return(ret)
 })
 
@@ -73,30 +82,47 @@ setMethod("summary", signature(object="cenmle"), function(object, ...)
     return (new("summary.cenmle", s))
 })
 
-
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
-    coef    = x@survreg$coefficients
-
-    median  = median(x)
-    mean    = mean(x)
-    sd      = sd(x)
-
-    ret = matrix(c(median(x), mean(x), sd(x)), ncol=3, nrow=length(coef),
-                 dimnames=list(names(coef), c("median", "mean", "sd")))
-
+    if (x@survreg$df > 2) ret = summary(x, ...)
+    else
+      {
+        ret = c(x@n, x@n.cen, median(x), mean(x)[1], sd(x)) 
+        names(ret) = c("n", "n.cen", "median", "mean", "sd")
+      }
     print(ret)
     invisible(ret)
 })
 
+setMethod("predict", signature(object="cenmle"), 
+          function(object, newdata, conf.int=FALSE, ...)
+{
+    x = object
 
-# Predict is broken for now
-#setMethod("predict", signature(object="cenmle"), summary) 
-#setMethod("predict", signature(object="cenmle"), 
-#          function(object, newdata, conf.int=FALSE, ...)
-#{
-#    predict(object@survreg, newdata, ...)
-#})
+    int   = as.vector(x@survreg$coefficients[1])
+    slope = as.vector(x@survreg$coefficients)
+    scale = x@survreg$scale
+
+    qhat = exp((newdata * slope) + int)
+
+    #semean = sqrt(diag(tcemle1@survreg$var))[3] * scale
+    #cov    = x@survreg$var[2,1] * scale
+    #varsig = x@survreg$var[2,2] * scale^2
+
+    #se = qhat * sqrt(semean^2)
+
+    # Two-sided conf int
+    #p = 1-((1-x@conf.int)/2)
+    #z = qnorm(p)
+
+    #w = exp((z*se)/qhat)
+
+    #lcl = qhat/w
+    #ucl = qhat*w
+
+    #return(c(qhat, lcl, ucl))
+    return(qhat)
+})
 
 setMethod("residuals", signature(object="cenmle"), function(object, ...)
 {

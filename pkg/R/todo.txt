@@ -31,6 +31,7 @@ KM:
 MLE:
     ! cenmle-gaussian assumes a single-level grouping -- fix it
     o print method like ROS and KM (n, n.cen, median, mean, sd)
+        x depends on discriminating between models with strata
     o print method needs to handle strata
     o cenmle:
         cenmle.control = survreg.control
@@ -44,4 +45,3 @@ ATS:
     o Intercept 
     o plotting routine (scattered data and regression)
 
-        
