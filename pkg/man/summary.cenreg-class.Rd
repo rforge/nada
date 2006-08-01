@@ -1,15 +1,15 @@
-\name{summary.cenmle-class}
+\name{summary.cenreg-class}
 \docType{class}
-\alias{summary.cenmle-class}
-\alias{summary.cenmle}
+\alias{summary.cenreg-class}
+\alias{summary.cenreg}
 
-\title{Class "summary.cenmle"}
+\title{Class "summary.cenreg"}
 \description{
-    A "summary.cenmle" object is returned from \code{summary}.
+    A "summary.cenreg" object is returned from \code{summary}.
 }
 \section{Objects from the Class}{
     Objects can be created by calls of the form 
-    \code{summary(cenmle(obs, censored))}.
+    \code{summary(cenreg(obs, censored, groups))}.
 }
 \section{Slots}{
   \describe{
@@ -23,19 +23,21 @@
 }
 \section{Methods}{
   \describe{
-    %\item{summary}{\code{signature(object = "cenmle")}: ... }
+    %\item{summary}{\code{signature(object = "cenreg")}: ... }
   }
 }
 \author{
     Lopaka(Rob) Lee <rclee@usgs.gov>
+
+    Dennis Helsel <dhelsel@usgs.gov>
 } 
 \seealso{
-  \code{\link{cenmle}}
+  \code{\link{cenreg}}
 }
 \examples{
     obs      = c(0.5,    0.5,   1.0,  1.5,   5.0,    10,   100)
     censored = c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE)
 
-    summary(cenmle(obs, censored))
+    summary(cenreg(obs, censored))
 }
 \keyword{classes}

@@ -1,7 +1,6 @@
 \name{cenmle-methods}
 \docType{methods}
 \alias{cenmle-methods}
-\alias{cenmle,formula,missing,missing-method}
 \alias{cenmle,Cen,missing,missing-method}
 \alias{cenmle,numeric,logical,missing-method}
 \alias{cenmle,numeric,logical,factor-method}

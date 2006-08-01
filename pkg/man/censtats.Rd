@@ -36,6 +36,8 @@
 }
 \author{
     Lopaka(Rob) Lee <rclee@usgs.gov>
+
+    Dennis Helsel <dhelsel@usgs.gov>
 } 
 %\seealso{
 %    \code{\link{NADA}},

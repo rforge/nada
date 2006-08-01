@@ -8,29 +8,36 @@
     Computes Kendall's tau for singly (y only) or doubly (x and y)
     censored data.  Computes the Akritas-Theil-Sen nonparametric line.
 }
-\synopsis{cenken(x, xcen, y, ycen)}
+\synopsis{cenken(y, ycen, x, xcen)}
 \usage{
-    cenken(x, xcen, y, ycen)
-    cenken(x, y, ycen)
+    cenken(y, ycen, x, xcen)
+    cenken(y, ycen, x)
 }
 \arguments{
-\item{x}{
-    A numeric vector of observations.
+\item{y}{
+    A numeric vector of observations or a formula.
 } 
-\item{xcen}{
+\item{ycen}{
     A  logical vector indicating TRUE where an observation in x is
     censored (a less-than value) and FALSE otherwise.  Can be 
     missing/omitted for the case where x is not censored.
 }
-\item{y}{
+\item{x}{
     A numeric vector of observations.
 }
-\item{ycen}{
+\item{xcen}{
     A logical vector indicating TRUE where an observation in y is
     censored (a less-than value) and FALSE otherwise.  
 }
 }
 \details{
+    If you are using the formula interface:  The \code{ycen}, \code{x}
+    and \code{xcen} parameters are not specified -- all information is
+    provided via a formula as the \code{y} parameter.  The formula must
+    have a \code{Cen} object as the response on the left of the \code{~}
+    operator and, if desired, terms separated by + operators on the right.
+    See example below.
+
     Kendall's tau is a nonparametric correlation coefficient measuring
     the monotonic association between y and x.  For left-censored data,
     concordant and discordant directions between x and y are measured
@@ -57,7 +64,7 @@
     Journ. Amer. Statistical Assoc. 90, p. 170-177.
 }
 \examples{
-    # Both x and y are censored
+    # Both y and x are censored
     # (exercise 11-1 on pg 198 of the NADA book)
     data(Golden)
     with(Golden, cenken(Blood, BloodCen, Kidney, KidneyCen))
@@ -65,6 +72,9 @@
     # x is not censored
     # (example on pg 213 of the NADA book)
     data(TCEReg)
-    with(TCEReg, cenken(PopDensity, log(TCEConc), TCECen))
+    with(TCEReg, cenken(log(TCEConc), TCECen, PopDensity))
+
+    # formula interface
+    with(TCEReg, cenken(Cen(log(TCEConc), TCECen)~PopDensity))
 }
 \keyword{regression}
