@@ -1,6 +1,5 @@
 \name{cenmle}
 \alias{cenmle}
-\alias{cenreg}
 \title{
     Regression by Maximum Likelihood Estimation for Left-censored Data
 }

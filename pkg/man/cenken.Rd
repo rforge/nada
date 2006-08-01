@@ -1,12 +1,12 @@
 \name{cenken}
 \alias{cenken}
 \title{
-    Replace: Compute an ECDF for Censored Data
+    Compute Kendall's tau correlation coefficient and associated 
+    line for censored data.
 }
 \description{
-    Replace: Computes an estimate of an empirical cumulative 
-    distribution function (ECDF) for censored data using the 
-    Kaplan-Meier method.
+    Computes Kendall's tau for singly (y only) or doubly (x and y)
+    censored data.  Computes the Akritas-Theil-Sen nonparametric line.
 }
 \synopsis{cenken(x, xcen, y, ycen)}
 \usage{
@@ -29,17 +29,21 @@
     A logical vector indicating TRUE where an observation in y is
     censored (a less-than value) and FALSE otherwise.  
 }
-%\item{formula}{
-%    The formula must have a \code{Cen} object as the response on the
-%    left of the \code{~} operator and, if desired, terms separated by +
-%    operators on the right.  One of the terms may be a \code{strata}
-%    object.  For a single survival curve the \code{"~ 1"} part of the
-%    formula is not required.
-%}
-
 }
 \details{
-    Computational details and other discussions of the method go here.
+    Kendall's tau is a nonparametric correlation coefficient measuring
+    the monotonic association between y and x.  For left-censored data,
+    concordant and discordant directions between x and y are measured
+    whenever possible.  So with increasing x values, a change in y
+    from <1 to 10 is an increase (concordant).  A change from a <1 to
+    a detected 0.5 is considered a tie, as is a <1 to a <5, because
+    neither can definitively be called an increase or decrease.  Tie
+    corrections are employed for the variance of the test statistic
+    in order to account for the many ties when computing p-values.
+    The ATS line is the slope that results in a Kendalls tau of 0
+    for correlation between the residuals, y-slope*x and x.  Cenken
+    performs an iterative bisection search to find that slope.  The
+    intercept is the median residual (not yet implemented).
 }
 \value{
     Returns tau (Kendall's tau), slope, and p-value for the regression.
@@ -47,17 +51,14 @@
 \references{
     Helsel, Dennis R. (2005).  Nondectects and Data Analysis; Statistics for
     censored environmental data.  John Wiley and Sons, USA, NJ.
+
+    Akritas, M.G., S. A. Murphy, and M. P. LaValley (1995).  The Theil-Sen 
+    Estimator With Doubly Censored Data and Applications to Astronomy.  
+    Journ. Amer. Statistical Assoc. 90, p. 170-177.
 }
-%\author{
-%    Lopaka(Rob) Lee <rclee@usgs.gov>
-%
-%    Dennis Helsel <dhelsel@usgs.gov>
-%} 
-%\seealso{
-%    \code{\link{cenken-methods}},
-%}
 \examples{
     # Both x and y are censored
+    # (exercise 11-1 on pg 198 of the NADA book)
     data(Golden)
     with(Golden, cenken(Blood, BloodCen, Kidney, KidneyCen))
 
@@ -65,9 +66,5 @@
     # (example on pg 213 of the NADA book)
     data(TCEReg)
     with(TCEReg, cenken(PopDensity, log(TCEConc), TCECen))
-
-%    # x (Year) is not censored -- formula interface
-%    data(DFe)
-%    with(DFe, cenken(Cen(Summer, SummerCen)~Year)
 }
-\keyword{survival}
+\keyword{regression}
