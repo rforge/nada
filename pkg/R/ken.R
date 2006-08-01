@@ -2,68 +2,49 @@
 
 ## Generics
 
-setGeneric("cenken", function(x, xcen, y, ycen) standardGeneric("cenken"))
-
-## Private supporting routines
-
-cenken0 =
-function(x, xcen, y, ycen)
-{
-    kendallATS(x, xcen, y, ycen)
-}
-
-cenken1 =
-function(x, xcen, y, ycen)
-{
-    xc = rep(FALSE, length(x))
-    kendallATS(x, xc, xcen, y)
-}
-
-# routine for cenken("numeric", "Cen")
-cenken.unicen =
-function(x, xcen, y, ycen)
-{
-    cenken1 (x, xcen@Surv[,1], !xcen@Surv[,2])
-}
-
-# routine for cenken("Cen", "Cen")
-cenken.bicen =
-function(x, xcen, y, ycen)
-{
-    kendallATS(x@Surv[,1], !x@Surv[,2], xcen@Surv[,1], !xcen@Surv[,2])
-}
+setGeneric("cenken", function(y, ycen, x, xcen) standardGeneric("cenken"))
 
 ## Methods
 
 setMethod("cenken",
-          signature(x="numeric", xcen="logical", y="numeric", ycen="logical"),
-          cenken0)
+          signature(y="numeric", ycen="logical", x="numeric", xcen="logical"),
+          function(y, ycen, x, xcen)
+{
+    kendallATS(y, ycen, x, xcen) 
+})
 
 setMethod("cenken",
-          signature(x="numeric", xcen="missing", y="numeric", ycen="logical"),
-          cenken1)
+          signature(y="numeric", ycen="logical", x="numeric", xcen="missing"),
+          function(y, ycen, x, xcen)
+{
+    xcen = rep(FALSE, length(x))
+    kendallATS(y, ycen, x, xcen)
+})
 
 setMethod("cenken",
-          signature(x="numeric", xcen="numeric", y="logical", ycen="missing"),
-          cenken1)
+          signature(y="formula", ycen="missing", x="missing", xcen="missing"),
+          function(y, ycen, x, xcen)
+{
+    f = y
 
-setMethod("cenken",
-          signature(x="numeric", xcen="Cen", y="missing", ycen="missing"),
-          cenken.unicen)
+    y    = eval(f[[2]][[2]])
+    ycen = eval(f[[2]][[3]])
 
-setMethod("cenken",
-          signature(x="Cen", xcen="Cen", y="missing", ycen="missing"),
-          cenken.bicen)
+    x    = eval(f[[3]])
+    xcen = rep(F, length(y))
+
+    kendallATS(y, ycen, x, xcen)
+})
 
 ## kendallATS function -- the heart of the cenken routines
 #  Original S code written by D. Lorenz for S-Plus.
 #  Port to R and R-native ktau function by L. Lee and D. Helsel.
 #
-# Kendall's tau used as an estimate of the relation between x and y
-#    with the ATS slope estimator (x and y left-censored).
+# Kendall's tau used as an estimate of the relation between y and x
+#    with the ATS slope estimator (y and x left-censored).
 #
 kendallATS =
-function(x, xcen, y, ycen, tol=1e-7, iter=1e+3) 
+function(y, ycen, x, xcen, tol=1e-7, iter=1e+3) 
 {
     # Jitter y so that detects and nondetects don't tie.
     # This is only needed in ktau_s but is done here

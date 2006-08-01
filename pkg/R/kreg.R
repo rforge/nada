@@ -57,28 +57,6 @@ setMethod("cenreg",
     return(ret)
 })
 
-#setMethod("cenreg", 
-#          signature(obs="numeric", censored="numeric", groups="logical"), 
-#          function(obs, censored, groups, ...)
-#{
-#    cl = match.call()
-#    f = substitute(Cen(a, b)~g, list(a=cl[[3]], b=cl[[4]], g=cl[[2]]))
-#    f = as.formula(f)
-#    environment(f) = parent.frame()
-#    cenreg(f, ...)
-#})
-
-#setMethod("cenreg", 
-#          signature(obs="factor", censored="numeric", groups="logical"), 
-#          function(obs, censored, groups, ...)
-#{
-#    cl = match.call()
-#    f = substitute(Cen(a, b)~g, list(a=cl[[3]], b=cl[[4]], g=cl[[2]]))
-#    f = as.formula(f)
-#    environment(f) = parent.frame()
-#    cenreg(f, ...)
-#})
-
 setMethod("cenreg", 
           signature(obs="numeric", censored="logical", groups="numeric"), 
           cencen.vectors.groups)
