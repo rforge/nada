@@ -1,4 +1,4 @@
-#-->> BEGIN Maximum Likelihood Estimation (MLE) Regression section
+#-->> BEGIN Maximum Likelihood Estimation FOR SUMMARY STATISTICS section
 
 ## Generics
 
@@ -7,131 +7,72 @@ setGeneric("cenmle",
 
 ## Classes
 
-setOldClass("survreg")
+setClass("cenmle", representation("cenreg"))
 
-setClass("cenmle", 
-         representation(
-          n="numeric", n.cen="numeric", conf.int="numeric", survreg="survreg"))
 setClass("cenmle-gaussian", representation("cenmle"))
 setClass("cenmle-lognormal", representation("cenmle"))
-setClass("summary.cenmle", representation("list"))
 
 ## Methods
 
-setMethod("LCL", 
-          signature(x="cenmle"),
-          function(x) 
-{ 
-    paste(x@conf.int, "LCL", sep='') 
-})
-
-setMethod("UCL", 
-          signature(x="cenmle"),
-          function(x) 
-{ 
-    paste(x@conf.int, "UCL", sep='') 
-})
-
-# This keeps things consistent with the survival package
-cenreg = cenmle
-
-# The generic formula method that is called from below
-setMethod("cenmle",
-          signature(obs="formula", censored="missing", groups="missing"),
-                    function(obs, censored, groups, dist, conf.int=0.95, ...)
+new_cenmle = 
+function(x)
 {
-    dist = ifelse(missing(dist), "lognormal", dist)
-    ret = switch(dist,
-                 gaussian  = new_cenmle_gaussian(obs, dist, ...),
-                 lognormal = new_cenmle_lognormal(obs, dist, ...),
-                 survreg(asSurv(obs), dist=dist, ...)
-    )
-
-    x    = eval.parent(obs[[2]][[2]])
-    xcen = eval.parent(obs[[2]][[3]])
-
-    ret@n = length(x)
-    ret@n.cen = length(x[xcen])
-
-    ret@conf.int = conf.int
+    if      (is(x, "cenreg-gaussian")) ret = new("cenmle-gaussian", x)
+    else if (is(x, "cenreg-lognormal")) ret = new("cenmle-lognormal", x)
+    else    stop("Unrecognized distribution") # This shouldn't happen
 
     return(ret)
-})
+}
 
-# Use the cencen.* framework (in All.R) to dispatch from these cases
 setMethod("cenmle", 
           signature(obs="Cen", censored="missing", groups="missing"), 
-          cencen.Cen)
+          function(obs, censored, groups, ...)
+{
+    cl = match.call()
+    f = as.formula(substitute(a~1, list(a=cl[[2]])))
+    environment(f) = parent.frame()
+    new_cenmle(cenreg(f, ...))
+})
 
 setMethod("cenmle",
           signature(obs="numeric", censored="logical", groups="missing"),
-                    cencen.vectors)
+          function(obs, censored, groups, ...)
+{
+    cl = match.call()
+    f = as.formula(substitute(Cen(a, b)~1, list(a=cl[[2]], b=cl[[3]])))
+    environment(f) = parent.frame()
+    new_cenmle(cenreg(f, ...))
+})
 
 setMethod("cenmle", 
           signature(obs="numeric", censored="logical", groups="factor"), 
-          cencen.vectors.groups)
+          function(obs, censored, groups, ...)
+{
+    cl = match.call()
+    f = substitute(Cen(a, b)~g, list(a=cl[[2]], b=cl[[3]], g=cl[[4]]))
+    f = as.formula(f)
+    environment(f) = parent.frame()
+    cenreg(f, ...)
+})
 
 setMethod("cenmle", 
           signature(obs="numeric", censored="logical", groups="numeric"), 
-          cencen.vectors.groups)
-
-setMethod("summary", signature(object="cenmle"), function(object, ...)
+          function(obs, censored, groups, ...)
 {
-    s = unclass(summary(object@survreg, ...))
-    s$r = rloglik(s)
-    return (new("summary.cenmle", s))
+    cl = match.call()
+    f = substitute(Cen(a, b)~g, list(a=cl[[2]], b=cl[[3]], g=cl[[4]]))
+    f = as.formula(f)
+    environment(f) = parent.frame()
+    cenreg(f, ...)
 })
+
 
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
-    if (x@survreg$df > 2) ret = summary(x, ...)
-    else
-      {
-        ret = c(x@n, x@n.cen, median(x), mean(x)[1], sd(x)) 
-        names(ret) = c("n", "n.cen", "median", "mean", "sd")
-      }
+    ret = c(x@n, x@n.cen, median(x), mean(x)[1], sd(x)) 
+    names(ret) = c("n", "n.cen", "median", "mean", "sd")
     print(ret)
     invisible(ret)
-})
-
-setMethod("predict", signature(object="cenmle"), 
-          function(object, newdata, conf.int=FALSE, ...)
-{
-    x = object
-
-    int   = as.vector(x@survreg$coefficients[1])
-    slope = as.vector(x@survreg$coefficients)
-    scale = x@survreg$scale
-
-    qhat = exp((newdata * slope) + int)
-
-    #semean = sqrt(diag(tcemle1@survreg$var))[3] * scale
-    #cov    = x@survreg$var[2,1] * scale
-    #varsig = x@survreg$var[2,2] * scale^2
-
-    #se = qhat * sqrt(semean^2)
-
-    # Two-sided conf int
-    #p = 1-((1-x@conf.int)/2)
-    #z = qnorm(p)
-
-    #w = exp((z*se)/qhat)
-
-    #lcl = qhat/w
-    #ucl = qhat*w
-
-    #return(c(qhat, lcl, ucl))
-    return(qhat)
-})
-
-setMethod("residuals", signature(object="cenmle"), function(object, ...)
-{
-    residuals(object@survreg, ...)
-})
-
-setMethod("coef", signature(object="cenmle"), function(object, ...)
-{
-    coef(object@survreg, ...)
 })
 
 setMethod("median", signature(x="cenmle-lognormal"), function(x, na.rm=FALSE)
@@ -268,118 +209,4 @@ setMethod("mean", signature(x="cenmle-gaussian"), function(x, na.rm=FALSE)
     return(ret)
 })
 
-setMethod("cor", signature(x="cenmle"), function(x, y, use, method)
-{
-    rloglik(summary(x))
-})
-
-# This is summary.survreg from the survival package --
-# for now we hack it to do what we want. 
-setMethod("print", signature(x="summary.cenmle"), function(x, ...)
-{
-    digits = max(options()$digits - 4, 3)
-    n <- x$n
-
-    print(x$table, digits = digits)
-    if (nrow(x$var)==length(x$coefficients)) 
-      {
-	    cat("\nScale fixed at", format(x$scale, digits=digits),"\n") 
-      }
-    else if (length(x$scale)==1) 
-      {
-	    cat ("\nScale=", format(x$scale, digits=digits), "\n")
-      }
-    else 
-      {
-	    cat("\nScale:\n")
-	    print(x$scale, digits=digits, ...)
-	  }
-
-    cat("\n", x$parms, "\n", sep='')
-    df  <- sum(x$df) - x$idf   # The sum is for penalized models
-    cat("Loglik(model)=", format(round(x$loglik[2],1)),
-	"  Loglik(intercept only)=", format(round(x$loglik[1],1)), "\n")
-
-    cat("Loglik-r: ", x$r, "\n");
-
-    if (df <= 0) cat ("\n")
-    else
-      {
-	    cat("\nChisq=", format(round(x$chi,2)), "on", round(df,1),
-		"degrees of freedom, p=", 
-		format(signif(1-pchisq(x$chi, df),2)), "\n")
-      }
-
-    if (x$robust) cat("(Loglikelihood assumes independent observations)\n")
-
-    cat("Number of Newton-Raphson Iterations:", format(trunc(x$iter)), "\n")
-
-    if (!length(x$na.action)) cat("n =", x$n, "\n")
-	else cat("n =", x$n, " (", naprint(x$na.action), ")\n", sep="")
-
-    if(!is.null(x$correl)) 
-      {
-        p <- dim(x$correl)[2]
-        if(p > 1) 
-          {
-            cat("\nCorrelation of Coefficients:\n")
-            ll <- lower.tri(x$correl)
-            x$correl[ll] <- format(round(x$correl[ll], digits=digits))
-            x$correl[!ll] <- ""
-            print(x$correl[-1,  - p, drop = FALSE], quote = FALSE)
-          }
-      }
-    cat("\n")
-    invisible(NULL)
-})
-
-## Supporting Functions -- private
-
-# Compute the log-likelihood correlation coef (r) from a cenmle summary obj.
-# Eq 11.4 pg 187 of Dennis' book
-rloglik =
-function(x)
-{
-    n = x$n
-    G = -2 * diff(x$loglik)
-
-    sqrt(1 - exp(G/n))
-}
-
-# cenmle for lognormal distributions
-
-new_cenmle_lognormal =
-function(formula, dist, ...)
-{
-    new("cenmle-lognormal", survreg=survreg(asSurv(formula), dist=dist, ...))
-}
-
-# cenmle for gaussian, or normal, distributions
-
-# If a normal distribution is assumed the input data must be expressed
-# as an interval between zero and the DL.  They cannot simply be stated as
-# 'left' censored, because that allows some probability of going below 0.
-# Since environmental/analytical data are _usually_ not negative,
-# estimates will be biased low and wrong.  So with the normal option
-# and left censoring, internally we must use interval censoring.  The end of
-# the interval are the detected values.  The start of the interval will
-# have identical numbers in it for the detects, and a 0 for the 
-# nondetects (a simple trick is: start = obs - obs * censored).
-
-new_cenmle_gaussian =
-function(formula, dist, ...)
-{
-    obs      = formula[[2]][[2]]
-    censored = formula[[2]][[3]]
-
-    ## This assumes a single-level grouping -- fix it!
-    groups   = formula[[3]]
-
-    f = as.formula(substitute(Surv(o - o * c, o, type="interval2")~g, 
-                                   list(o=obs, c=censored, g=groups)))
-    environment(f) = parent.frame()
-    new("cenmle-gaussian", survreg=survreg(f, dist=dist, ...))
-}
-
-#-->> END Regression on Maximum Likelihood Estimation (MLE) section
-
+#-->> END Maximum Likelihood Estimation FOR SUMMARY STATISTICS section

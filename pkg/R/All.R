@@ -163,13 +163,35 @@ function(obs, censored)
         cat("\nUncensored between each threshold:\n")
         print(limits["A",])
 
-        cat("\ROS probability of exceeding each threshold:\n")
+        cat("\nROS probability of exceeding each threshold:\n")
         print(limits["P",])
     }
     ret = smry(obs, censored)
 
     invisible(ret)
 }
+
+# Broken until I can figure out the eval.parent problem in cenreg
+censtats =
+function(obs, censored) 
+{
+    #stop("This convenience function is currently broken ... sorry")
+
+    skm  = cenfit(obs, censored)
+    sros = cenros(obs, censored)
+    smle = cenmle(obs, censored)
+
+    med  = c(median(skm), median(sros), median(smle))
+    sd   = c(sd(skm), sd(sros), sd(smle)[1])
+    mean = c(mean(skm)[1], mean(sros), mean(smle)[1])
+
+    len = c(length(obs), length(which(censored == T)), pctCen(obs, censored))
+    names(len) = c("n", "n.cen", "pct.cen")
+    print(len)
+
+    data.frame(median=med, mean=mean, sd=sd, row.names=c("K-M", "ROS", "MLE"))
+}
+
 
 #-->> BEGIN general utility functions
 
