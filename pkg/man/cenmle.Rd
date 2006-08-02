@@ -44,7 +44,7 @@
     function from the `survival' package.  The most important of which
     is `dist' and `conf.int'.  See Details below.
 }
-} %arguments
+} %END arguments
 \details{
     This routine is a front end to the \code{survreg} routine in the
     \code{survival} package.  
@@ -96,13 +96,12 @@ censored environmental data.  John Wiley and Sons, USA, NJ.
     Dennis Helsel <dhelsel@usgs.gov>
 } 
 \seealso{
-%    \code{\link{cenmle-methods}},
     \code{\link{Cen}}, 
+    \code{\link{cenmle-methods}},
     \code{\link{mean-methods}}, 
     \code{\link{sd-methods}}, 
     \code{\link{median-methods}}, 
-%    \code{\link{quantile-methods}}, 
-%    \code{\link{predict-methods}}, 
+    \code{\link{quantile-methods}}, 
     \code{\link{summary-methods}} 
 }
 
@@ -112,33 +111,18 @@ censored environmental data.  John Wiley and Sons, USA, NJ.
 
     data(TCEReg)
 
-    obs      = TCEReg$TCEConc 
-    censored = TCEReg$TCECen
+    tcemle = with(TCEReg, cenmle(TCEConc, TCECen)) 
 
-    mycenmle = cenmle(obs, censored) 
+    summary(tcemle)
+    median(tcemle)
+    mean(tcemle)
+    sd(tcemle)
+    quantile(tcemle)
 
-    summary(mycenmle)
-    median(mycenmle)
-    mean(mycenmle)
-    sd(mycenmle)
-
-    # With a 0.8 confidence interval 
-    mycenmle = cenmle(obs, censored, conf.int=0.8)
-
-    # Now use the model's confidence interval
-    quantile(mycenmle, conf.int=TRUE)
+    # Use the model's confidence interval
+    quantile(tcemle, conf.int=TRUE)
 
     # With groupings
-    groups = as.factor(TCEReg$LandUse)
-    cenmle(obs, censored, groups)
-    
-    # Formula interface -- no groups
-    cenmle(Cen(obs, censored)) 
-    # assume a gaussian distribution
-    #cenmle(Cen(obs, censored), dist="gaussian") 
-
-    # Formula interface -- a complicated regression
-    attach(TCEReg)
-    cenmle(Cen(TCEConc, TCECen)~PopDensity+PctIndLU+Depth)
+    with(TCEReg, cenmle(TCEConc, TCECen, PopDensity)) 
 }
 \keyword{survival}

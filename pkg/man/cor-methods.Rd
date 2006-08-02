@@ -2,15 +2,15 @@
 \docType{methods}
 \alias{cor-methods}
 \alias{cor,ANY-method}
-\alias{cor,cenmle-method}
+\alias{cor,cenreg-method}
 \title{Methods for function cor in Package NADA}
 \description{
   Methods for function \code{cor} in package \pkg{NADA} 
 }
 \section{Methods}{
 \describe{
-\item{x = "cenmle"}{Extracts the r-likelihood correlation coefficient from
-a \code{cenmle} object.}
+\item{x = "cenreg"}{Extracts the r-likelihood correlation coefficient from
+a \code{cenreg} object.}
 }
 } % descibe
 \keyword{methods}

@@ -36,10 +36,11 @@ Class \code{"vector"}, by class \code{"list"}.
 \seealso{
   \code{\link{survreg}}
 }
-\examples{
-    x        = c(0.5,    0.5,   1.0,  1.5,   5.0,    10,   100)
-    xcen     = c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE)
-
-    class(cenreg(x, xcen))
+%\examples{
+%    # This is wrong for cenreg
+%    x        = c(0.5,    0.5,   1.0,  1.5,   5.0,    10,   100)
+%    xcen     = c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE)
+%
+%    class(cenreg(x, xcen))
 }
 \keyword{classes}

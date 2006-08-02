@@ -27,10 +27,10 @@ setMethod("cenken",
 {
     f = y
 
-    y    = eval(f[[2]][[2]])
-    ycen = eval(f[[2]][[3]])
+    y    = eval.parent(f[[2]][[2]])
+    ycen = eval.parent(f[[2]][[3]])
 
-    x    = eval(f[[3]])
+    x    = eval.parent(f[[3]])
     xcen = rep(F, length(y))
 
     kendallATS(y, ycen, x, xcen)

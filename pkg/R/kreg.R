@@ -35,9 +35,8 @@ setMethod("UCL",
 })
 
 # The generic formula method that is called from below
-setMethod("cenreg",
-          signature(obs="formula", censored="missing", groups="missing"),
-          function(obs, censored, groups, dist, conf.int=0.95, ...)
+cenreg.default =
+function(obs, censored, groups, dist, conf.int=0.95, ...)
 {
     dist = ifelse(missing(dist), "lognormal", dist)
     ret = switch(dist,
@@ -46,16 +45,23 @@ setMethod("cenreg",
                  survreg(asSurv(obs), dist=dist, ...)
     )
 
-    y    = eval(obs[[2]][[2]])
-    ycen = eval(obs[[2]][[3]])
+    #y    = eval.parent(obs[[2]][[2]])
+    #ycen = eval.parent(obs[[2]][[3]])
 
-    ret@n = length(y)
-    ret@n.cen = length(y[ycen])
+    #ret@n = length(y)
+    #ret@n.cen = length(y[ycen])
+
+    ret@n = 0
+    ret@n.cen = 0
 
     ret@conf.int = conf.int
 
     return(ret)
-})
+}
+
+setMethod("cenreg",
+          signature(obs="formula", censored="missing", groups="missing"),
+          cenreg.default)
 
 setMethod("cenreg", 
           signature(obs="numeric", censored="logical", groups="numeric"), 

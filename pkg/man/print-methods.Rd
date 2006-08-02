@@ -5,7 +5,8 @@
 \alias{print,Cen-method}
 \alias{print,cenfit-method}
 \alias{print,cenmle-method}
-\alias{print,summary.cenmle-method}
+\alias{print,cenreg-method}
+\alias{print,summary.cenreg-method}
 \alias{print,ros-method}
 \alias{print,NADAList-method}
 \title{Methods for function print in Package NADA}
@@ -23,7 +24,9 @@
 
 \item{x = "cenmle"}{Displays a \code{cenmle} object.}
 
-\item{x = "summary.cenmle"}{Displays a \code{summary.cenmle} object.}
+\item{x = "cenreg"}{Displays a \code{cenreg} object.}
+
+\item{x = "summary.cenreg"}{Displays a \code{summary.cenreg} object.}
 
 \item{x = "ros"}{Displays a \code{ros} object.}
 

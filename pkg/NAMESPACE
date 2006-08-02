@@ -14,6 +14,7 @@ export(
     "cenreg",
     "cenros",
     "cenken",
+#    "kendallATS",
     "cenboxplot",
     "cenxyplot",
     "censummary",
@@ -26,10 +27,13 @@ export(
 exportClasses(
     "ros",
     "cenfit",
+    "cenreg",
+    "cenreg-lognormal",
+    "cenreg-gaussian",
     "cenmle",
     "cenmle-lognormal",
     "cenmle-gaussian",
-    "summary.cenmle")
+    "summary.cenreg")
 
 exportMethods(
     "print",

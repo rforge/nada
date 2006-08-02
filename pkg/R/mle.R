@@ -44,6 +44,7 @@ setMethod("cenmle",
     new_cenmle(cenreg(f, ...))
 })
 
+
 setMethod("cenmle", 
           signature(obs="numeric", censored="logical", groups="factor"), 
           function(obs, censored, groups, ...)
@@ -65,7 +66,6 @@ setMethod("cenmle",
     environment(f) = parent.frame()
     cenreg(f, ...)
 })
-
 
 setMethod("print", signature(x="cenmle"), function(x, ...)
 {
