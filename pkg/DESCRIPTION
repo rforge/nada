@@ -8,4 +8,4 @@ Description: Contains methods described by Dennis R. Helsel in
 Maintainer: Lopaka Lee <rclee@usgs.gov>
 Depends: methods, survival
 License: GPL version 2 or newer
-Collate: All.R cen.R km.R reg.R mle.R ken.R ros.R
+Collate: All.R summary.R cen.R km.R reg.R mle.R ken.R ros.R

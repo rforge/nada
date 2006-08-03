@@ -8,6 +8,8 @@ All:
 
     o Fix cenxyplot
 
+    o r-devel () adds dots to as.data.frame as.data.frame:
+
 Ros:
     o abline is broken
     o plot without plotting of points
@@ -18,12 +20,12 @@ Ros:
     o the output data needs an index to get it back to original ordering
 
 Cen:
-    x flip factor should be larger than min (!need to validate this change)
+    x flip factor should be larger than min 
+       (!need to validate this change -- current fix may not work for log data)
 
 KM:
     ? boxplot method
     - a pretty plot method
-    ? move survival stuff from cen.R to km.R
 
     ! Why doesn't km.median == median for uncensored dataset?
     ! data parameter doesn't get passed in cenfit
