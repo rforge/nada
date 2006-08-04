@@ -6,11 +6,12 @@ All:
     o Better method documentation
     o single-vector input
 
-    o Fix cenxyplot
-
-    o r-devel () adds dots to as.data.frame as.data.frame:
+    o r-devel adds dots to as.data.frame as.data.frame:
 
 Ros:
+    o Remove any nondetects that are higher than the highest detected value.
+        (These observations don't contain any information)
+
     o abline is broken
     o plot without plotting of points
     o points method

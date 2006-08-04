@@ -115,5 +115,4 @@ function (x, xcen, y, ycen, log="xy", lty="dashed", ...)
 ## END general plots routines
 
 
-
 #-->> END general summary and plotting routines for the NADA package
