@@ -11,6 +11,7 @@ setOldClass("survreg")
 
 setClass("cenreg", 
          representation(
+          y="numeric", ycen="logical", 
           n="numeric", n.cen="numeric", conf.int="numeric", survreg="survreg"))
 
 setClass("cenreg-gaussian", representation("cenreg"))
@@ -37,13 +38,16 @@ function(obs, censored, groups, dist, conf.int=0.95, ...)
                  survreg(asSurv(obs), dist=dist, ...)
     )
 
-    y    = eval(obs[[2]][[2]], environment(obs))
-    ycen = eval(obs[[2]][[3]], environment(obs))
+    ret@y    = eval(obs[[2]][[2]], environment(obs))
+    ret@ycen = eval(obs[[2]][[3]], environment(obs))
 
-    ret@n = length(y)
-    ret@n.cen = length(y[ycen])
+    ret@n = length(ret@y)
+    ret@n.cen = length(ret@y[ret@ycen])
 
     ret@conf.int = conf.int
+
+    #browser()
+    ret@survreg$call = sys.call(sys.parent())
 
     return(ret)
 }
