@@ -83,16 +83,32 @@ function(obs, censored)
 
 # Dennis' censored boxplots 
 cenboxplot =
-function(obs, censored, group, log=TRUE, range=0, ...) 
+function(obs, cen, group, log=TRUE, range=0, ...) 
 {
   if (log) log="y"
   else     log=""
 
-  if (missing(group)) ret = boxplot(obs, log=log, range=range, ...)
-  else                 ret = boxplot(obs~group, log=log, range=range, ...)
+  if (missing(group)) 
+      ret = boxplot(cenros(obs, cen), log=log, range=range, ...)
+  else
+    {
+      modeled = numeric()
+      groups  = character()
+      for (i in levels(as.factor(group)))
+        {
+            mod = suppressWarnings(
+                    cenros(obs[group == i], cen[group == i])$modeled)
+            grp = rep(i, length(mod))
+
+            modeled = c(modeled, mod)
+            groups = c(groups, grp)
+        }
+      boxplot(modeled~as.factor(groups), log=log, range=range, ...)
+      ret = data.frame(ros.model=modeled, group=groups)
+    }
 
   # Draw horiz line at max censored value
-  abline(h=max(obs[censored])) 
+  abline(h=max(obs[cen])) 
 
   invisible(ret)
 }

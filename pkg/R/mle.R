@@ -97,6 +97,17 @@ setMethod("plot", signature(x="cenmle-lognormal", y="missing"),
     abline(x@survreg$coefficients[1], x@survreg$scale)
 })
 
+setMethod("plot", signature(x="cenmle-gaussian", y="missing"), 
+           function(x, y, xlim=c(-3, 3), ...) 
+{
+    s = cenfit(x@y, x@ycen)
+    plot(x=qnorm(s@survfit$surv), y=s@survfit$time, ..., 
+         xlab="Normal Quantiles", ylab="Value", xlim=xlim)
+    #title(main="Censored Probability Plot")
+    abline(x@survreg$coefficients[1], x@survreg$scale)
+})
+
+
 setMethod("quantile", signature(x="cenmle-lognormal"),
           function(x, probs = NADAprobs, conf.int = FALSE, ...)
 {

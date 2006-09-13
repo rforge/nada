@@ -38,6 +38,7 @@ MLE:
     o print method needs to handle strata
     o cenmle:
         cenmle.control = survreg.control
+    o prob plot for cenmle-gaussian
 
 *** FEATURE ISSUES
 
