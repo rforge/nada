@@ -81,6 +81,11 @@ function(x)
     return(x)
 }
 
+setMethod("show", signature(object="ros"), function(object)
+{
+    print(object)
+})
+
 setMethod("print", signature(x="ros"), function(x, ...)
 {
     n       = length(x$modeled)
@@ -92,7 +97,7 @@ setMethod("print", signature(x="ros"), function(x, ...)
     ret = c(n, n.cen, median, mean, sd)
     names(ret) = c("n", "n.cen", "median", "mean", "sd")
 
-    print(ret)
+    print(ret, ...)
     invisible(ret)
 })
 

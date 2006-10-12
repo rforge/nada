@@ -66,8 +66,9 @@ setMethod("cenmle",
     eval.parent(cenreg(f, ...))
 })
 
-setMethod("print", signature(x="cenmle"), function(x, ...)
+setMethod("show", signature(object="cenmle"), function(object)
 {
+    x = object
     ret = c(x@n, x@n.cen, median(x), mean(x)[1], sd(x)) 
     names(ret) = c("n", "n.cen", "median", "mean", "sd")
     print(ret)

@@ -71,11 +71,20 @@ setMethod("summary", signature(object="cenreg"), function(object, ...)
     return (new("summary.cenreg", s))
 })
 
-setMethod("print", signature(x="cenreg"), function(x, ...)
+setMethod("show", signature(object="cenreg"), function(object)
 {
-    ret = summary(x, ...)
+    ret = summary(object)
     print(ret)
     invisible(ret)
+})
+
+setMethod("plot", signature(x="cenreg"), 
+           function(x, y, ylab="Residuals", xlab="Normal Quantiles", ...) 
+{
+    res = as.vector(residuals(x, type="deviance"))
+    res.km = cenfit(res[!x@ycen], x@ycen[!x@ycen])
+    plot(qnorm(res.km@survfit$surv), res.km@survfit$time, 
+         ylab=ylab, xlab=xlab, ...)
 })
 
 setMethod("predict", signature(object="cenreg-lognormal"), 
@@ -134,8 +143,9 @@ setMethod("cor", signature(x="cenreg"), function(x, y, use, method)
 
 # This is summary.survreg from the survival package --
 # for now we hack it to do what we want. 
-setMethod("print", signature(x="summary.cenreg"), function(x, ...)
+setMethod("show", signature(object="summary.cenreg"), function(object)
 {
+    x = object
     digits = max(options()$digits - 4, 3)
     n <- x$n
 

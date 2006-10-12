@@ -337,8 +337,9 @@ setMethod("median", signature(x="cenfit"), function(x, na.rm=FALSE)
     return(ret)
 })
 
-setMethod("print", signature(x="cenfit"), function(x, ...)
+setMethod("show", signature(object="cenfit"), function(object)
 {
+    x = object 
     s = x@survfit
 
     summaryVec =
@@ -374,7 +375,7 @@ setMethod("print", signature(x="cenfit"), function(x, ...)
         rownames(ret) = names(s$strata)
       }
 
-    print(ret, ...)
+    print(ret)
     invisible(ret)
 })
 
