@@ -79,12 +79,46 @@ setMethod("show", signature(object="cenreg"), function(object)
 })
 
 setMethod("plot", signature(x="cenreg"), 
-           function(x, y, ylab="Residuals", xlab="Normal Quantiles", ...) 
+           function(x, y, ylab="Y", xlab="X", method=1, ...) 
 {
-    res = as.vector(residuals(x, type="deviance"))
-    res.km = cenfit(res[!x@ycen], x@ycen[!x@ycen])
-    plot(qnorm(res.km@survfit$surv), res.km@survfit$time, 
-         ylab=ylab, xlab=xlab, ...)
+    # Plots the percentiles of residuals vs their values
+    method1 = function(x, y, ylab, xlab, ...)
+      {
+        res = as.vector(residuals(x, type="deviance"))
+        res.km = cenfit(res, x@ycen)
+
+        surv = res.km@survfit$surv
+        time = res.km@survfit$time
+
+        plot(time, surv, ylab=ylab, xlab=xlab, ...)
+      }
+
+    # Plots the qnorm(percentiles) of residuals vs their values
+    method2 = function(x, y, ylab, xlab, ...)
+      {
+        res = as.vector(residuals(x, type="deviance"))
+        res.km = cenfit(res[!x@ycen], x@ycen[!x@ycen])
+        plot(qnorm(res.km@survfit$surv), res.km@survfit$time, 
+             ylab=ylab, xlab=xlab, ...)
+      }
+
+    # Same as method2 but only plots residuals > 0
+    method3 = function(x, y, ylab, xlab, ...)
+      {
+        res = as.vector(residuals(x, type="deviance"))
+        res.km = cenfit(res, x@ycen)
+
+        surv = res.km@survfit$surv
+        time = res.km@survfit$time
+
+        plot(qnorm(surv[time > 0]), time[time > 0], ylab=ylab, xlab=xlab, ...)
+      }
+
+    switch (method,
+        method1(x, y, ylab, xlab, ...),
+        method2(x, y, ylab, xlab, ...),
+        method3(x, y, ylab, xlab, ...),
+    )
 })
 
 setMethod("predict", signature(object="cenreg-lognormal"), 
