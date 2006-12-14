@@ -50,12 +50,12 @@ function (obs, censored, groups)
     censummary(obs, censored, as.factor(groups))
 })
 
-setMethod("print", signature("censummary"), function(x, ...)
+setMethod("show", signature("censummary"), function(object)
 {
-    for (i in names(x))
+    for (i in names(object))
       {
         cat(i, ":\n", sep="")
-        print(x[[i]])
+        print(object[[i]])
         cat("\n")
       }
 })

@@ -97,13 +97,13 @@ setClass("NADAList", "list")
 
 #setMethod("summary", signature(), function(x, ...))
 
-setMethod("print", signature("NADAList"), function(x, ...)
+setMethod("show", signature("NADAList"), function(object)
 {
-    tag = names(x)
-    for (i in 1:length(x))
+    tag = names(object)
+    for (i in 1:length(object))
       {
         cat(tag[i], "\n")
-        print(x[[i]])
+        print(object[[i]])
         cat("\n")
       }
 })
