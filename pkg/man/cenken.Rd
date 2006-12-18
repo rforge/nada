@@ -82,5 +82,12 @@
 
     # formula interface
     with(TCEReg, cenken(Cen(log(TCEConc), TCECen)~PopDensity))
+
+    # Plotting data and the regression line
+    data(DFe)
+    # Recall x and y parameter positons are swapped in plot vs regression calls
+    with(DFe, cenxyplot(Year, YearCen, Summer, SummerCen))    # x vs. y
+    reg = with(DFe, cenken(Summer, SummerCen, Year, YearCen)) # y~x
+    lines(reg)
 }
 \keyword{regression}

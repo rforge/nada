@@ -11,6 +11,7 @@
 \alias{show,cenreg-method}
 \alias{show,censummary-method}
 \alias{show,NADAList-method}
+\alias{show,cenken-method}
 \title{Methods for function show in Package NADA}
 \description{
   Methods for showting objects in package \pkg{NADA} 
@@ -25,6 +26,8 @@
 \S4method{show}{cenreg}(object)
 
 \S4method{show}{summary.cenreg}(object)
+
+\S4method{show}{cenken}(object)
 
 \S4method{show}{censummary}(object)
 

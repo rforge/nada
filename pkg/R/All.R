@@ -97,6 +97,8 @@ setClass("NADAList", "list")
 
 #setMethod("summary", signature(), function(x, ...))
 
+setMethod("print", signature("NADAList"), function(x, ...) show(x))
+
 setMethod("show", signature("NADAList"), function(object)
 {
     tag = names(object)
