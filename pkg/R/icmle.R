@@ -153,7 +153,7 @@ EM<-function(A, pvec, maxiter = 500, tol = 1e-12)
             notdone<-FALSE
         pvec<-np
     }
-    if( notdone ) warning("EM may have failed to converge")
+    #if( notdone ) warning("EM may have failed to converge")
     ret <- list(pf=pvec, numiter=i,
                 converge=!notdone, intmap=intmap)
     class(ret) <- "icsurv"

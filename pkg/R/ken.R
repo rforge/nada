@@ -45,6 +45,11 @@ setMethod("cenken",
     kendallATS(y, ycen, x, xcen)
 })
 
+setMethod("show", signature(object="cenken"), function(object)
+{
+    show(as(object, "NADAList"))
+})
+
 setMethod("lines", signature(x="cenken"), function (x, ...)
 {
      abline(a=x$intercept, b=x$slope, ...)
