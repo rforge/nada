@@ -9,6 +9,9 @@ All:
     o r-devel adds dots to as.data.frame as.data.frame:
 
 Ros:
+    o Add option for different plotting positions 
+        (see pg23 of Helsel and Hirsch) 
+
     o Remove any nondetects that are higher than the highest detected value.
         (These observations don't contain any information)
 
@@ -19,6 +22,7 @@ Ros:
     o data that goes along for the ride and is printed in the as.data.frame
       (this will allow identify)
     o the output data needs an index to get it back to original ordering
+    o xlim, ylim, and other par options should be override-able
 
 Cen:
     x flip factor should be larger than min 

@@ -115,7 +115,7 @@ function(obs, cen, group, log=TRUE, range=0, ...)
 
 # Dennis' censored xy plots -- need to fix this
 cenxyplot =
-function (x, xcen, y, ycen, log="xy", lty="dashed", ...) 
+function (x, xcen, y, ycen, log="", lty="dashed", ...) 
 {
     plot(x, y, log = log, type = "n", ...)
 
