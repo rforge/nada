@@ -1,6 +1,6 @@
 import("survival")
 
-importFrom("stats", "sd", "median", "quantile", "residuals", "coef", "cor")
+importFrom("stats", "sd", "median", "quantile", "residuals", "coef", "cor", "predict")
 importFrom("graphics", "plot", "abline", "lines", "boxplot")
 
 export(
