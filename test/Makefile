@@ -1,4 +1,4 @@
-PREFIX='/home/rclee/local/src/R'
+PREFIX='/home/rclee/local/src/R-devel'
 R=${PREFIX}/bin/R
 PACKAGE_DIR=../pkg
 VERSION=`grep 'Version' ${PACKAGE_DIR}/DESCRIPTION \
@@ -21,7 +21,7 @@ install: build
 	${R} CMD INSTALL ${PACKAGE_FILE}
 
 check: build
-	${R} CMD check ${PACKAGE_FILE}
+	${R} CMD check --as-cran ${PACKAGE_FILE}
 
 clean:
 	rm -f ${PACKAGE_FILE}

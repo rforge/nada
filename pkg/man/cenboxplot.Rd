@@ -51,7 +51,7 @@
 \author{
     Lopaka Lee <llee@usgs.gov>
 
-    Dennis Helsel <dhelsel@usgs.gov>
+    Dennis Helsel <dhelsel@practicalstats.com>
 } 
 %\seealso{
 %    \code{\link{NADA}},
