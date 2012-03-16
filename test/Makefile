@@ -1,4 +1,4 @@
-PREFIX='/home/rclee/local/src/R-2.14.1'
+PREFIX='/home/rclee/local/src/R'
 R=${PREFIX}/bin/R
 PACKAGE_DIR=../pkg
 VERSION=`grep 'Version' ${PACKAGE_DIR}/DESCRIPTION \
@@ -8,6 +8,8 @@ PACKAGE_FILE=${PACKAGE}_${VERSION}.tar.gz
 
 default:
 	echo "Usage make [build|remove|install|check|clean]"
+
+help: default
 
 build:
 	${R} CMD build ${PACKAGE_DIR}
