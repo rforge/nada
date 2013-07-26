@@ -6,7 +6,6 @@
 \description{
     Produces basic, and hopefully useful, summary statistics on censored data.
 }
-\synopsis{censummary(obs, censored, groups)}
 \usage{
     censummary(obs, censored, groups)
 }

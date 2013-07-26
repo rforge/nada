@@ -10,7 +10,6 @@
     Order Statistics (ROS), Maximum Likelihood Estimation (MLE), and
     Kaplan-Meier (K-M).
 }
-\synopsis{censtats(obs, censored)}
 \usage{
     censtats(obs, censored)
 }

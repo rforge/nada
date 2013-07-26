@@ -21,9 +21,6 @@
      tests, a probability plot of residuals should be checked to ensure
      that residuals from the regression model are approximately gaussian.
 }
-\synopsis{
-    cenmle(obs, censored, groups, ...)
-}
 \usage{
     cenmle(obs, censored, groups, ...)
 }

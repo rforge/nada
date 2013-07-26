@@ -1,4 +1,4 @@
-PREFIX='/home/rclee/local/src/R-devel'
+PREFIX='/home/rclee/local/src/R'
 R=${PREFIX}/bin/R
 PACKAGE_DIR=../pkg
 VERSION=`grep 'Version' ${PACKAGE_DIR}/DESCRIPTION \

@@ -7,7 +7,6 @@
     Computes an estimate of an empirical cumulative distribution function
     (ECDF) for censored data using the Kaplan-Meier method.
 }
-\synopsis{cenfit(obs, censored, groups, ...)}
 \usage{
     cenfit(obs, censored, groups, ...)
 }

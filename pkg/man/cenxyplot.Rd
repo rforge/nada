@@ -7,9 +7,6 @@
     Draws a x-y scatter plot with censored values represented by
     dashed lines spanning the from the censored threshold to zero.
 }
-\synopsis{
-    cenxyplot(x, xcen, y, ycen, log="", lty="dashed", ...)
-}
 \usage{
     cenxyplot(x, xcen, y, ycen, log="", lty="dashed", ...)
 }
