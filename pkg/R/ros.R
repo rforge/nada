@@ -3,8 +3,9 @@
 ## Generics
 
 setGeneric("ros", 
-           function(obs, censored, forwardT = "log", reverseT = "exp", na.action=getOption("na.action")) 
-             standardGeneric("ros"))
+           function(obs, censored, forwardT = "log", reverseT = "exp", 
+                    na.action=getOption("na.action")) 
+                    standardGeneric("ros"))
 
 ## Classes
 

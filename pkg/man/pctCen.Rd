@@ -16,9 +16,11 @@
 	        censored (a less-than value) and FALSE otherwise.
         } 
         \item{na.action}{
-            na.action: a function which indicates what should happen when 
-            the data contain ‘NA’s.  The default is set by the ‘na.action’ 
-            setting of ‘options’, and is ‘na.omit’ if that is unset.  
+              A function which indicates what should happen
+              when the data contain \code{NA}s.  The default is set by
+              the \code{na.action} setting of \code{\link{options}}, and is
+              \code{\link{na.omit}} if that is unset.  
+              Another possible value is \code{NULL}, no action. 
         }
 } 
 \details{
@@ -31,7 +33,7 @@
     the percentage of values censored in the ``obs" vector.
 } 
 \author{
-    Lopaka Lee <llee@usgs.gov>
+    R. Lopaka Lee <rclee@usgs.gov>
 
     Dennis Helsel <dhelsel@practicalstats.com>
 } 
