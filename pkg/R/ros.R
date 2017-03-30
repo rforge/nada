@@ -115,7 +115,7 @@ setMethod("summary", "ros", function(object, plot=FALSE, ...)
     if (plot)
       {
         oldClass(object) = "lm"
-        plot.lm(object, ...)
+        plot(object, ...)
       }
     return(ret)
 })

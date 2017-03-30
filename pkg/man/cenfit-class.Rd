@@ -2,6 +2,7 @@
 \docType{class}
 \alias{cenfit-class}
 \alias{[,cenfit,numeric,missing-method}
+\alias{[,cenfit,numeric,missing,ANY-method}
 
 \title{Class "cenfit"}
 \description{  
