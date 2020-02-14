@@ -31,9 +31,9 @@
 }
 \item{na.rm}{Should NAs be removed prior to computation?}
 
-\item{...}{
-        Additional arguments passed to the generic method.
-}
+%\item{...}{
+%        Additional arguments passed to the generic method.
+%}
 
 } % End arguments
 

@@ -1,4 +1,4 @@
-PREFIX=${HOME}/local/src/R/trunk
+PREFIX=${HOME}/local/src/R-devel
 R=${PREFIX}/bin/R
 PACKAGE_DIR=../pkg
 VERSION=`grep 'Version' ${PACKAGE_DIR}/DESCRIPTION \
